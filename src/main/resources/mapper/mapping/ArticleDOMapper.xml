@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flwm.dal.mapper.ArticleDOMapper">
+  <resultMap id="BaseResultMap" type="com.flwm.dal.dao.ArticleDO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="publish_time" jdbcType="TIMESTAMP" property="publishTime" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="digest" jdbcType="VARCHAR" property="digest" />
+    <result column="visit_count" jdbcType="INTEGER" property="visitCount" />
+    <result column="comment_count" jdbcType="INTEGER" property="commentCount" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.flwm.dal.dao.ArticleDOWithBLOBs">
+    <result column="ctx" jdbcType="LONGVARCHAR" property="ctx" />
+    <result column="feature" jdbcType="LONGVARCHAR" property="feature" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, publish_time, url, title, digest, visit_count, comment_count
+  </sql>
+  <sql id="Blob_Column_List">
+    ctx, feature
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from share_article
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from share_article limit #{offset},#{pageSize}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from share_article
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.flwm.dal.dao.ArticleDOWithBLOBs">
+    insert into share_article (id, publish_time, url, 
+      title, digest, visit_count, 
+      comment_count, ctx, feature
+      )
+    values (#{id,jdbcType=INTEGER}, #{publishTime,jdbcType=TIMESTAMP}, #{url,jdbcType=VARCHAR}, 
+      #{title,jdbcType=VARCHAR}, #{digest,jdbcType=VARCHAR}, #{visitCount,jdbcType=INTEGER}, 
+      #{commentCount,jdbcType=INTEGER}, #{ctx,jdbcType=LONGVARCHAR}, #{feature,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.flwm.dal.dao.ArticleDOWithBLOBs">
+    insert into share_article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="publishTime != null">
+        publish_time,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="digest != null">
+        digest,
+      </if>
+      <if test="visitCount != null">
+        visit_count,
+      </if>
+      <if test="commentCount != null">
+        comment_count,
+      </if>
+      <if test="ctx != null">
+        ctx,
+      </if>
+      <if test="feature != null">
+        feature,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="publishTime != null">
+        #{publishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="digest != null">
+        #{digest,jdbcType=VARCHAR},
+      </if>
+      <if test="visitCount != null">
+        #{visitCount,jdbcType=INTEGER},
+      </if>
+      <if test="commentCount != null">
+        #{commentCount,jdbcType=INTEGER},
+      </if>
+      <if test="ctx != null">
+        #{ctx,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="feature != null">
+        #{feature,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.flwm.dal.dao.ArticleDOWithBLOBs">
+    update share_article
+    <set>
+      <if test="publishTime != null">
+        publish_time = #{publishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="digest != null">
+        digest = #{digest,jdbcType=VARCHAR},
+      </if>
+      <if test="visitCount != null">
+        visit_count = #{visitCount,jdbcType=INTEGER},
+      </if>
+      <if test="commentCount != null">
+        comment_count = #{commentCount,jdbcType=INTEGER},
+      </if>
+      <if test="ctx != null">
+        ctx = #{ctx,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="feature != null">
+        feature = #{feature,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.flwm.dal.dao.ArticleDOWithBLOBs">
+    update share_article
+    set publish_time = #{publishTime,jdbcType=TIMESTAMP},
+      url = #{url,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      digest = #{digest,jdbcType=VARCHAR},
+      visit_count = #{visitCount,jdbcType=INTEGER},
+      comment_count = #{commentCount,jdbcType=INTEGER},
+      ctx = #{ctx,jdbcType=LONGVARCHAR},
+      feature = #{feature,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.flwm.dal.dao.ArticleDO">
+    update share_article
+    set publish_time = #{publishTime,jdbcType=TIMESTAMP},
+      url = #{url,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      digest = #{digest,jdbcType=VARCHAR},
+      visit_count = #{visitCount,jdbcType=INTEGER},
+      comment_count = #{commentCount,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

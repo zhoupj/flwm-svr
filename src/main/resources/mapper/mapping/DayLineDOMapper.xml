@@ -1,0 +1,714 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flwm.dal.mapper.DayLineDOMapper">
+  <resultMap id="BaseResultMap" type="com.flwm.dal.dao.DayLineDO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="trade_date" jdbcType="DATE" property="tradeDate" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="open" jdbcType="DOUBLE" property="open" />
+    <result column="high" jdbcType="DOUBLE" property="high" />
+    <result column="low" jdbcType="DOUBLE" property="low" />
+    <result column="close" jdbcType="DOUBLE" property="close" />
+    <result column="volume" jdbcType="BIGINT" property="volume" />
+    <result column="turn" jdbcType="DOUBLE" property="turn" />
+    <result column="tradestatus" jdbcType="INTEGER" property="tradestatus" />
+    <result column="isST" jdbcType="INTEGER" property="isst" />
+    <result column="totals" jdbcType="DOUBLE" property="totals" />
+    <result column="isHighOfYear" jdbcType="INTEGER" property="ishighofyear" />
+    <result column="isHighOfHistory" jdbcType="INTEGER" property="ishighofhistory" />
+    <result column="isLowOfyear" jdbcType="INTEGER" property="islowofyear" />
+    <result column="isLowOfHistory" jdbcType="INTEGER" property="islowofhistory" />
+    <result column="incOf250" jdbcType="DOUBLE" property="incof250" />
+    <result column="incOf120" jdbcType="DOUBLE" property="incof120" />
+    <result column="incOf50" jdbcType="DOUBLE" property="incof50" />
+    <result column="rps120" jdbcType="DOUBLE" property="rps120" />
+    <result column="rps250" jdbcType="DOUBLE" property="rps250" />
+    <result column="rps50" jdbcType="DOUBLE" property="rps50" />
+    <result column="fluOf250d" jdbcType="DOUBLE" property="fluof250d" />
+    <result column="fluOf120d" jdbcType="DOUBLE" property="fluof120d" />
+    <result column="fluOf80d" jdbcType="DOUBLE" property="fluof80d" />
+    <result column="fluOf10d" jdbcType="DOUBLE" property="fluof10d" />
+    <result column="fluOf5d" jdbcType="DOUBLE" property="fluof5d" />
+    <result column="diffToHigh250" jdbcType="DOUBLE" property="difftohigh250" />
+    <result column="diffToHigh120" jdbcType="DOUBLE" property="difftohigh120" />
+    <result column="diffToHigh80" jdbcType="DOUBLE" property="difftohigh80" />
+    <result column="sps120" jdbcType="DOUBLE" property="sps120" />
+    <result column="sps250" jdbcType="DOUBLE" property="sps250" />
+    <result column="sps80" jdbcType="DOUBLE" property="sps80" />
+    <result column="ma5" jdbcType="DOUBLE" property="ma5" />
+    <result column="ma10" jdbcType="DOUBLE" property="ma10" />
+    <result column="ma20" jdbcType="DOUBLE" property="ma20" />
+    <result column="ma50" jdbcType="DOUBLE" property="ma50" />
+    <result column="ma120" jdbcType="DOUBLE" property="ma120" />
+    <result column="ma250" jdbcType="DOUBLE" property="ma250" />
+    <result column="turn10ma" jdbcType="DOUBLE" property="turn10ma" />
+    <result column="turn50ma" jdbcType="DOUBLE" property="turn50ma" />
+    <result column="turnIncToYesterday" jdbcType="DOUBLE" property="turninctoyesterday" />
+    <result column="turnIncTo50Day" jdbcType="DOUBLE" property="turnincto50day" />
+    <result column="peTTM" jdbcType="DOUBLE" property="pettm" />
+    <result column="curNumPeTTM1Y" jdbcType="DOUBLE" property="curnumpettm1y" />
+    <result column="curNumPeTTM3Y" jdbcType="DOUBLE" property="curnumpettm3y" />
+    <result column="curNumPeTTM5Y" jdbcType="DOUBLE" property="curnumpettm5y" />
+    <result column="curNumPeTTMALL" jdbcType="DOUBLE" property="curnumpettmall" />
+    <result column="hk_holding_amount" jdbcType="DOUBLE" property="hkHoldingAmount" />
+    <result column="hk_holding_ratio" jdbcType="DOUBLE" property="hkHoldingRatio" />
+    <result column="incOf2d" jdbcType="DOUBLE" property="incof2d" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, trade_date, code, open, high, low, close, volume, turn, tradestatus, isST, totals, 
+    isHighOfYear, isHighOfHistory, isLowOfyear, isLowOfHistory, incOf250, incOf120, incOf50, 
+    rps120, rps250, rps50, fluOf250d, fluOf120d, fluOf80d, fluOf10d, fluOf5d, diffToHigh250, 
+    diffToHigh120, diffToHigh80, sps120, sps250, sps80, ma5, ma10, ma20, ma50, ma120, 
+    ma250, turn10ma, turn50ma, turnIncToYesterday, turnIncTo50Day, peTTM, curNumPeTTM1Y, 
+    curNumPeTTM3Y, curNumPeTTM5Y, curNumPeTTMALL, hk_holding_amount, hk_holding_ratio, 
+    incOf2d
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from share_data_day
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <select id="selectByCond" parameterType="com.flwm.common.domain.SearchRequest" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from share_data_day
+    where 1=1
+      <if test="tradeDate!=null">
+        and  trade_date = #{tradeDate,jdbcType=DATE}
+      </if>
+      <if test="code != null">
+       and  code = #{code,jdbcType=VARCHAR}
+      </if>
+      <if test="turn != null">
+       and  turn &lt;= #{turn,jdbcType=DOUBLE}
+      </if>
+      <if test="totals != null">
+        and  totals &lt;= #{totals,jdbcType=DOUBLE}
+      </if>
+      <if test="ishighofyear != null">
+        and  isHighOfYear = #{ishighofyear,jdbcType=INTEGER}
+      </if>
+
+      <if test="rps120 != null">
+        and  rps120 &gt;= #{rps120,jdbcType=DOUBLE}
+      </if>
+      <if test="rps250 != null">
+        and  rps250 &gt;= #{rps250,jdbcType=DOUBLE}
+      </if>
+      <if test="rps50 != null">
+        and  rps50 &gt;= #{rps50,jdbcType=DOUBLE}
+      </if>
+      <if test="fluof250d != null">
+        and  fluOf250d &lt;= #{fluof250d,jdbcType=DOUBLE}
+      </if>
+      <if test="fluof120d != null">
+        and   fluOf120d &lt;=  #{fluof120d,jdbcType=DOUBLE}
+      </if>
+      <if test="fluof80d != null">
+        and  fluOf80d &lt;=  #{fluof80d,jdbcType=DOUBLE}
+      </if>
+      <if test="fluof10d != null">
+        and  fluOf10d &lt;=  #{fluof10d,jdbcType=DOUBLE}
+      </if>
+
+      <if test="difftohigh250 != null">
+        and  diffToHigh250 &lt;= #{difftohigh250,jdbcType=DOUBLE}
+      </if>
+
+      <if test="closeGreaterTo50!=null and closeGreaterTo50==1">
+        and  close > ma50
+      </if>
+
+      <if test="pettm != null">
+        and peTTM &lt;= #{pettm,jdbcType=DOUBLE}
+      </if>
+
+      <if test="hkHoldingAmount != null">
+       and  hk_holding_amount &gt;= #{hkHoldingAmount,jdbcType=DOUBLE}
+      </if>
+      <if test="hkHoldingRatio != null">
+        and hk_holding_ratio &gt;= #{hkHoldingRatio,jdbcType=DOUBLE}
+      </if>
+      order by id
+      limit #{offset},#{pageSize}
+  </select>
+
+  <select id="selectByCode" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from share_data_day
+    where code=#{code}
+    order by trade_date desc
+    limit #{days}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from share_data_day
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.flwm.dal.dao.DayLineDO">
+    insert into share_data_day (id, trade_date, code, 
+      open, high, low, close, 
+      volume, turn, tradestatus, 
+      isST, totals, isHighOfYear, 
+      isHighOfHistory, isLowOfyear, isLowOfHistory, 
+      incOf250, incOf120, incOf50, 
+      rps120, rps250, rps50, 
+      fluOf250d, fluOf120d, fluOf80d, 
+      fluOf10d, fluOf5d, diffToHigh250, 
+      diffToHigh120, diffToHigh80, sps120, 
+      sps250, sps80, ma5, ma10, 
+      ma20, ma50, ma120, ma250, 
+      turn10ma, turn50ma, turnIncToYesterday, 
+      turnIncTo50Day, peTTM, curNumPeTTM1Y, 
+      curNumPeTTM3Y, curNumPeTTM5Y, curNumPeTTMALL, 
+      hk_holding_amount, hk_holding_ratio, incOf2d
+      )
+    values (#{id,jdbcType=INTEGER}, #{tradeDate,jdbcType=DATE}, #{code,jdbcType=VARCHAR}, 
+      #{open,jdbcType=DOUBLE}, #{high,jdbcType=DOUBLE}, #{low,jdbcType=DOUBLE}, #{close,jdbcType=DOUBLE}, 
+      #{volume,jdbcType=BIGINT}, #{turn,jdbcType=DOUBLE}, #{tradestatus,jdbcType=INTEGER}, 
+      #{isst,jdbcType=INTEGER}, #{totals,jdbcType=DOUBLE}, #{ishighofyear,jdbcType=INTEGER}, 
+      #{ishighofhistory,jdbcType=INTEGER}, #{islowofyear,jdbcType=INTEGER}, #{islowofhistory,jdbcType=INTEGER}, 
+      #{incof250,jdbcType=DOUBLE}, #{incof120,jdbcType=DOUBLE}, #{incof50,jdbcType=DOUBLE}, 
+      #{rps120,jdbcType=DOUBLE}, #{rps250,jdbcType=DOUBLE}, #{rps50,jdbcType=DOUBLE}, 
+      #{fluof250d,jdbcType=DOUBLE}, #{fluof120d,jdbcType=DOUBLE}, #{fluof80d,jdbcType=DOUBLE}, 
+      #{fluof10d,jdbcType=DOUBLE}, #{fluof5d,jdbcType=DOUBLE}, #{difftohigh250,jdbcType=DOUBLE}, 
+      #{difftohigh120,jdbcType=DOUBLE}, #{difftohigh80,jdbcType=DOUBLE}, #{sps120,jdbcType=DOUBLE}, 
+      #{sps250,jdbcType=DOUBLE}, #{sps80,jdbcType=DOUBLE}, #{ma5,jdbcType=DOUBLE}, #{ma10,jdbcType=DOUBLE}, 
+      #{ma20,jdbcType=DOUBLE}, #{ma50,jdbcType=DOUBLE}, #{ma120,jdbcType=DOUBLE}, #{ma250,jdbcType=DOUBLE}, 
+      #{turn10ma,jdbcType=DOUBLE}, #{turn50ma,jdbcType=DOUBLE}, #{turninctoyesterday,jdbcType=DOUBLE}, 
+      #{turnincto50day,jdbcType=DOUBLE}, #{pettm,jdbcType=DOUBLE}, #{curnumpettm1y,jdbcType=DOUBLE}, 
+      #{curnumpettm3y,jdbcType=DOUBLE}, #{curnumpettm5y,jdbcType=DOUBLE}, #{curnumpettmall,jdbcType=DOUBLE}, 
+      #{hkHoldingAmount,jdbcType=DOUBLE}, #{hkHoldingRatio,jdbcType=DOUBLE}, #{incof2d,jdbcType=DOUBLE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.flwm.dal.dao.DayLineDO">
+    insert into share_data_day
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="tradeDate != null">
+        trade_date,
+      </if>
+      <if test="code != null">
+        code,
+      </if>
+      <if test="open != null">
+        open,
+      </if>
+      <if test="high != null">
+        high,
+      </if>
+      <if test="low != null">
+        low,
+      </if>
+      <if test="close != null">
+        close,
+      </if>
+      <if test="volume != null">
+        volume,
+      </if>
+      <if test="turn != null">
+        turn,
+      </if>
+      <if test="tradestatus != null">
+        tradestatus,
+      </if>
+      <if test="isst != null">
+        isST,
+      </if>
+      <if test="totals != null">
+        totals,
+      </if>
+      <if test="ishighofyear != null">
+        isHighOfYear,
+      </if>
+      <if test="ishighofhistory != null">
+        isHighOfHistory,
+      </if>
+      <if test="islowofyear != null">
+        isLowOfyear,
+      </if>
+      <if test="islowofhistory != null">
+        isLowOfHistory,
+      </if>
+      <if test="incof250 != null">
+        incOf250,
+      </if>
+      <if test="incof120 != null">
+        incOf120,
+      </if>
+      <if test="incof50 != null">
+        incOf50,
+      </if>
+      <if test="rps120 != null">
+        rps120,
+      </if>
+      <if test="rps250 != null">
+        rps250,
+      </if>
+      <if test="rps50 != null">
+        rps50,
+      </if>
+      <if test="fluof250d != null">
+        fluOf250d,
+      </if>
+      <if test="fluof120d != null">
+        fluOf120d,
+      </if>
+      <if test="fluof80d != null">
+        fluOf80d,
+      </if>
+      <if test="fluof10d != null">
+        fluOf10d,
+      </if>
+      <if test="fluof5d != null">
+        fluOf5d,
+      </if>
+      <if test="difftohigh250 != null">
+        diffToHigh250,
+      </if>
+      <if test="difftohigh120 != null">
+        diffToHigh120,
+      </if>
+      <if test="difftohigh80 != null">
+        diffToHigh80,
+      </if>
+      <if test="sps120 != null">
+        sps120,
+      </if>
+      <if test="sps250 != null">
+        sps250,
+      </if>
+      <if test="sps80 != null">
+        sps80,
+      </if>
+      <if test="ma5 != null">
+        ma5,
+      </if>
+      <if test="ma10 != null">
+        ma10,
+      </if>
+      <if test="ma20 != null">
+        ma20,
+      </if>
+      <if test="ma50 != null">
+        ma50,
+      </if>
+      <if test="ma120 != null">
+        ma120,
+      </if>
+      <if test="ma250 != null">
+        ma250,
+      </if>
+      <if test="turn10ma != null">
+        turn10ma,
+      </if>
+      <if test="turn50ma != null">
+        turn50ma,
+      </if>
+      <if test="turninctoyesterday != null">
+        turnIncToYesterday,
+      </if>
+      <if test="turnincto50day != null">
+        turnIncTo50Day,
+      </if>
+      <if test="pettm != null">
+        peTTM,
+      </if>
+      <if test="curnumpettm1y != null">
+        curNumPeTTM1Y,
+      </if>
+      <if test="curnumpettm3y != null">
+        curNumPeTTM3Y,
+      </if>
+      <if test="curnumpettm5y != null">
+        curNumPeTTM5Y,
+      </if>
+      <if test="curnumpettmall != null">
+        curNumPeTTMALL,
+      </if>
+      <if test="hkHoldingAmount != null">
+        hk_holding_amount,
+      </if>
+      <if test="hkHoldingRatio != null">
+        hk_holding_ratio,
+      </if>
+      <if test="incof2d != null">
+        incOf2d,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="tradeDate != null">
+        #{tradeDate,jdbcType=DATE},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="open != null">
+        #{open,jdbcType=DOUBLE},
+      </if>
+      <if test="high != null">
+        #{high,jdbcType=DOUBLE},
+      </if>
+      <if test="low != null">
+        #{low,jdbcType=DOUBLE},
+      </if>
+      <if test="close != null">
+        #{close,jdbcType=DOUBLE},
+      </if>
+      <if test="volume != null">
+        #{volume,jdbcType=BIGINT},
+      </if>
+      <if test="turn != null">
+        #{turn,jdbcType=DOUBLE},
+      </if>
+      <if test="tradestatus != null">
+        #{tradestatus,jdbcType=INTEGER},
+      </if>
+      <if test="isst != null">
+        #{isst,jdbcType=INTEGER},
+      </if>
+      <if test="totals != null">
+        #{totals,jdbcType=DOUBLE},
+      </if>
+      <if test="ishighofyear != null">
+        #{ishighofyear,jdbcType=INTEGER},
+      </if>
+      <if test="ishighofhistory != null">
+        #{ishighofhistory,jdbcType=INTEGER},
+      </if>
+      <if test="islowofyear != null">
+        #{islowofyear,jdbcType=INTEGER},
+      </if>
+      <if test="islowofhistory != null">
+        #{islowofhistory,jdbcType=INTEGER},
+      </if>
+      <if test="incof250 != null">
+        #{incof250,jdbcType=DOUBLE},
+      </if>
+      <if test="incof120 != null">
+        #{incof120,jdbcType=DOUBLE},
+      </if>
+      <if test="incof50 != null">
+        #{incof50,jdbcType=DOUBLE},
+      </if>
+      <if test="rps120 != null">
+        #{rps120,jdbcType=DOUBLE},
+      </if>
+      <if test="rps250 != null">
+        #{rps250,jdbcType=DOUBLE},
+      </if>
+      <if test="rps50 != null">
+        #{rps50,jdbcType=DOUBLE},
+      </if>
+      <if test="fluof250d != null">
+        #{fluof250d,jdbcType=DOUBLE},
+      </if>
+      <if test="fluof120d != null">
+        #{fluof120d,jdbcType=DOUBLE},
+      </if>
+      <if test="fluof80d != null">
+        #{fluof80d,jdbcType=DOUBLE},
+      </if>
+      <if test="fluof10d != null">
+        #{fluof10d,jdbcType=DOUBLE},
+      </if>
+      <if test="fluof5d != null">
+        #{fluof5d,jdbcType=DOUBLE},
+      </if>
+      <if test="difftohigh250 != null">
+        #{difftohigh250,jdbcType=DOUBLE},
+      </if>
+      <if test="difftohigh120 != null">
+        #{difftohigh120,jdbcType=DOUBLE},
+      </if>
+      <if test="difftohigh80 != null">
+        #{difftohigh80,jdbcType=DOUBLE},
+      </if>
+      <if test="sps120 != null">
+        #{sps120,jdbcType=DOUBLE},
+      </if>
+      <if test="sps250 != null">
+        #{sps250,jdbcType=DOUBLE},
+      </if>
+      <if test="sps80 != null">
+        #{sps80,jdbcType=DOUBLE},
+      </if>
+      <if test="ma5 != null">
+        #{ma5,jdbcType=DOUBLE},
+      </if>
+      <if test="ma10 != null">
+        #{ma10,jdbcType=DOUBLE},
+      </if>
+      <if test="ma20 != null">
+        #{ma20,jdbcType=DOUBLE},
+      </if>
+      <if test="ma50 != null">
+        #{ma50,jdbcType=DOUBLE},
+      </if>
+      <if test="ma120 != null">
+        #{ma120,jdbcType=DOUBLE},
+      </if>
+      <if test="ma250 != null">
+        #{ma250,jdbcType=DOUBLE},
+      </if>
+      <if test="turn10ma != null">
+        #{turn10ma,jdbcType=DOUBLE},
+      </if>
+      <if test="turn50ma != null">
+        #{turn50ma,jdbcType=DOUBLE},
+      </if>
+      <if test="turninctoyesterday != null">
+        #{turninctoyesterday,jdbcType=DOUBLE},
+      </if>
+      <if test="turnincto50day != null">
+        #{turnincto50day,jdbcType=DOUBLE},
+      </if>
+      <if test="pettm != null">
+        #{pettm,jdbcType=DOUBLE},
+      </if>
+      <if test="curnumpettm1y != null">
+        #{curnumpettm1y,jdbcType=DOUBLE},
+      </if>
+      <if test="curnumpettm3y != null">
+        #{curnumpettm3y,jdbcType=DOUBLE},
+      </if>
+      <if test="curnumpettm5y != null">
+        #{curnumpettm5y,jdbcType=DOUBLE},
+      </if>
+      <if test="curnumpettmall != null">
+        #{curnumpettmall,jdbcType=DOUBLE},
+      </if>
+      <if test="hkHoldingAmount != null">
+        #{hkHoldingAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="hkHoldingRatio != null">
+        #{hkHoldingRatio,jdbcType=DOUBLE},
+      </if>
+      <if test="incof2d != null">
+        #{incof2d,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.flwm.dal.dao.DayLineDO">
+    update share_data_day
+    <set>
+      <if test="tradeDate != null">
+        trade_date = #{tradeDate,jdbcType=DATE},
+      </if>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="open != null">
+        open = #{open,jdbcType=DOUBLE},
+      </if>
+      <if test="high != null">
+        high = #{high,jdbcType=DOUBLE},
+      </if>
+      <if test="low != null">
+        low = #{low,jdbcType=DOUBLE},
+      </if>
+      <if test="close != null">
+        close = #{close,jdbcType=DOUBLE},
+      </if>
+      <if test="volume != null">
+        volume = #{volume,jdbcType=BIGINT},
+      </if>
+      <if test="turn != null">
+        turn = #{turn,jdbcType=DOUBLE},
+      </if>
+      <if test="tradestatus != null">
+        tradestatus = #{tradestatus,jdbcType=INTEGER},
+      </if>
+      <if test="isst != null">
+        isST = #{isst,jdbcType=INTEGER},
+      </if>
+      <if test="totals != null">
+        totals = #{totals,jdbcType=DOUBLE},
+      </if>
+      <if test="ishighofyear != null">
+        isHighOfYear = #{ishighofyear,jdbcType=INTEGER},
+      </if>
+      <if test="ishighofhistory != null">
+        isHighOfHistory = #{ishighofhistory,jdbcType=INTEGER},
+      </if>
+      <if test="islowofyear != null">
+        isLowOfyear = #{islowofyear,jdbcType=INTEGER},
+      </if>
+      <if test="islowofhistory != null">
+        isLowOfHistory = #{islowofhistory,jdbcType=INTEGER},
+      </if>
+      <if test="incof250 != null">
+        incOf250 = #{incof250,jdbcType=DOUBLE},
+      </if>
+      <if test="incof120 != null">
+        incOf120 = #{incof120,jdbcType=DOUBLE},
+      </if>
+      <if test="incof50 != null">
+        incOf50 = #{incof50,jdbcType=DOUBLE},
+      </if>
+      <if test="rps120 != null">
+        rps120 = #{rps120,jdbcType=DOUBLE},
+      </if>
+      <if test="rps250 != null">
+        rps250 = #{rps250,jdbcType=DOUBLE},
+      </if>
+      <if test="rps50 != null">
+        rps50 = #{rps50,jdbcType=DOUBLE},
+      </if>
+      <if test="fluof250d != null">
+        fluOf250d = #{fluof250d,jdbcType=DOUBLE},
+      </if>
+      <if test="fluof120d != null">
+        fluOf120d = #{fluof120d,jdbcType=DOUBLE},
+      </if>
+      <if test="fluof80d != null">
+        fluOf80d = #{fluof80d,jdbcType=DOUBLE},
+      </if>
+      <if test="fluof10d != null">
+        fluOf10d = #{fluof10d,jdbcType=DOUBLE},
+      </if>
+      <if test="fluof5d != null">
+        fluOf5d = #{fluof5d,jdbcType=DOUBLE},
+      </if>
+      <if test="difftohigh250 != null">
+        diffToHigh250 = #{difftohigh250,jdbcType=DOUBLE},
+      </if>
+      <if test="difftohigh120 != null">
+        diffToHigh120 = #{difftohigh120,jdbcType=DOUBLE},
+      </if>
+      <if test="difftohigh80 != null">
+        diffToHigh80 = #{difftohigh80,jdbcType=DOUBLE},
+      </if>
+      <if test="sps120 != null">
+        sps120 = #{sps120,jdbcType=DOUBLE},
+      </if>
+      <if test="sps250 != null">
+        sps250 = #{sps250,jdbcType=DOUBLE},
+      </if>
+      <if test="sps80 != null">
+        sps80 = #{sps80,jdbcType=DOUBLE},
+      </if>
+      <if test="ma5 != null">
+        ma5 = #{ma5,jdbcType=DOUBLE},
+      </if>
+      <if test="ma10 != null">
+        ma10 = #{ma10,jdbcType=DOUBLE},
+      </if>
+      <if test="ma20 != null">
+        ma20 = #{ma20,jdbcType=DOUBLE},
+      </if>
+      <if test="ma50 != null">
+        ma50 = #{ma50,jdbcType=DOUBLE},
+      </if>
+      <if test="ma120 != null">
+        ma120 = #{ma120,jdbcType=DOUBLE},
+      </if>
+      <if test="ma250 != null">
+        ma250 = #{ma250,jdbcType=DOUBLE},
+      </if>
+      <if test="turn10ma != null">
+        turn10ma = #{turn10ma,jdbcType=DOUBLE},
+      </if>
+      <if test="turn50ma != null">
+        turn50ma = #{turn50ma,jdbcType=DOUBLE},
+      </if>
+      <if test="turninctoyesterday != null">
+        turnIncToYesterday = #{turninctoyesterday,jdbcType=DOUBLE},
+      </if>
+      <if test="turnincto50day != null">
+        turnIncTo50Day = #{turnincto50day,jdbcType=DOUBLE},
+      </if>
+      <if test="pettm != null">
+        peTTM = #{pettm,jdbcType=DOUBLE},
+      </if>
+      <if test="curnumpettm1y != null">
+        curNumPeTTM1Y = #{curnumpettm1y,jdbcType=DOUBLE},
+      </if>
+      <if test="curnumpettm3y != null">
+        curNumPeTTM3Y = #{curnumpettm3y,jdbcType=DOUBLE},
+      </if>
+      <if test="curnumpettm5y != null">
+        curNumPeTTM5Y = #{curnumpettm5y,jdbcType=DOUBLE},
+      </if>
+      <if test="curnumpettmall != null">
+        curNumPeTTMALL = #{curnumpettmall,jdbcType=DOUBLE},
+      </if>
+      <if test="hkHoldingAmount != null">
+        hk_holding_amount = #{hkHoldingAmount,jdbcType=DOUBLE},
+      </if>
+      <if test="hkHoldingRatio != null">
+        hk_holding_ratio = #{hkHoldingRatio,jdbcType=DOUBLE},
+      </if>
+      <if test="incof2d != null">
+        incOf2d = #{incof2d,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.flwm.dal.dao.DayLineDO">
+    update share_data_day
+    set trade_date = #{tradeDate,jdbcType=DATE},
+      code = #{code,jdbcType=VARCHAR},
+      open = #{open,jdbcType=DOUBLE},
+      high = #{high,jdbcType=DOUBLE},
+      low = #{low,jdbcType=DOUBLE},
+      close = #{close,jdbcType=DOUBLE},
+      volume = #{volume,jdbcType=BIGINT},
+      turn = #{turn,jdbcType=DOUBLE},
+      tradestatus = #{tradestatus,jdbcType=INTEGER},
+      isST = #{isst,jdbcType=INTEGER},
+      totals = #{totals,jdbcType=DOUBLE},
+      isHighOfYear = #{ishighofyear,jdbcType=INTEGER},
+      isHighOfHistory = #{ishighofhistory,jdbcType=INTEGER},
+      isLowOfyear = #{islowofyear,jdbcType=INTEGER},
+      isLowOfHistory = #{islowofhistory,jdbcType=INTEGER},
+      incOf250 = #{incof250,jdbcType=DOUBLE},
+      incOf120 = #{incof120,jdbcType=DOUBLE},
+      incOf50 = #{incof50,jdbcType=DOUBLE},
+      rps120 = #{rps120,jdbcType=DOUBLE},
+      rps250 = #{rps250,jdbcType=DOUBLE},
+      rps50 = #{rps50,jdbcType=DOUBLE},
+      fluOf250d = #{fluof250d,jdbcType=DOUBLE},
+      fluOf120d = #{fluof120d,jdbcType=DOUBLE},
+      fluOf80d = #{fluof80d,jdbcType=DOUBLE},
+      fluOf10d = #{fluof10d,jdbcType=DOUBLE},
+      fluOf5d = #{fluof5d,jdbcType=DOUBLE},
+      diffToHigh250 = #{difftohigh250,jdbcType=DOUBLE},
+      diffToHigh120 = #{difftohigh120,jdbcType=DOUBLE},
+      diffToHigh80 = #{difftohigh80,jdbcType=DOUBLE},
+      sps120 = #{sps120,jdbcType=DOUBLE},
+      sps250 = #{sps250,jdbcType=DOUBLE},
+      sps80 = #{sps80,jdbcType=DOUBLE},
+      ma5 = #{ma5,jdbcType=DOUBLE},
+      ma10 = #{ma10,jdbcType=DOUBLE},
+      ma20 = #{ma20,jdbcType=DOUBLE},
+      ma50 = #{ma50,jdbcType=DOUBLE},
+      ma120 = #{ma120,jdbcType=DOUBLE},
+      ma250 = #{ma250,jdbcType=DOUBLE},
+      turn10ma = #{turn10ma,jdbcType=DOUBLE},
+      turn50ma = #{turn50ma,jdbcType=DOUBLE},
+      turnIncToYesterday = #{turninctoyesterday,jdbcType=DOUBLE},
+      turnIncTo50Day = #{turnincto50day,jdbcType=DOUBLE},
+      peTTM = #{pettm,jdbcType=DOUBLE},
+      curNumPeTTM1Y = #{curnumpettm1y,jdbcType=DOUBLE},
+      curNumPeTTM3Y = #{curnumpettm3y,jdbcType=DOUBLE},
+      curNumPeTTM5Y = #{curnumpettm5y,jdbcType=DOUBLE},
+      curNumPeTTMALL = #{curnumpettmall,jdbcType=DOUBLE},
+      hk_holding_amount = #{hkHoldingAmount,jdbcType=DOUBLE},
+      hk_holding_ratio = #{hkHoldingRatio,jdbcType=DOUBLE},
+      incOf2d = #{incof2d,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

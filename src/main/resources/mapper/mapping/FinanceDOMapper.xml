@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flwm.dal.mapper.FinanceDOMapper">
+  <resultMap id="BaseResultMap" type="com.flwm.dal.dao.FinanceDO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="fin_date" jdbcType="DATE" property="finDate" />
+    <result column="fin_year" jdbcType="INTEGER" property="finYear" />
+    <result column="fin_season" jdbcType="INTEGER" property="finSeason" />
+    <result column="fin_type" jdbcType="INTEGER" property="finType" />
+    <result column="jll" jdbcType="DOUBLE" property="jll" />
+    <result column="mll" jdbcType="DOUBLE" property="mll" />
+    <result column="jbmgsy" jdbcType="DOUBLE" property="jbmgsy" />
+    <result column="mgjyxjl" jdbcType="DOUBLE" property="mgjyxjl" />
+    <result column="gsjlr" jdbcType="DOUBLE" property="gsjlr" />
+    <result column="kfjlr" jdbcType="DOUBLE" property="kfjlr" />
+    <result column="yyzsr" jdbcType="DOUBLE" property="yyzsr" />
+    <result column="yyzsrtbzz" jdbcType="DOUBLE" property="yyzsrtbzz" />
+    <result column="gsjlrtbzz" jdbcType="DOUBLE" property="gsjlrtbzz" />
+    <result column="kfjlrtbzz" jdbcType="DOUBLE" property="kfjlrtbzz" />
+    <result column="jbmgsytbzz" jdbcType="DOUBLE" property="jbmgsytbzz" />
+    <result column="fund_holding" jdbcType="DOUBLE" property="fundHolding" />
+    <result column="isExpected" jdbcType="INTEGER" property="isexpected" />
+    <result column="season_ma2" jdbcType="DOUBLE" property="seasonMa2" />
+    <result column="season_ma8" jdbcType="DOUBLE" property="seasonMa8" />
+    <result column="ssr_2" jdbcType="DOUBLE" property="ssr2" />
+    <result column="ssr_8" jdbcType="DOUBLE" property="ssr8" />
+    <result column="sb_holding" jdbcType="DOUBLE" property="sbHolding" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, code, fin_date, fin_year, fin_season, fin_type, jll, mll, jbmgsy, mgjyxjl, gsjlr, 
+    kfjlr, yyzsr, yyzsrtbzz, gsjlrtbzz, kfjlrtbzz, jbmgsytbzz, fund_holding, isExpected, 
+    season_ma2, season_ma8, ssr_2, ssr_8, sb_holding
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from share_data_finance
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByCond" parameterType="com.flwm.common.domain.FinRequest" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from share_data_finance
+    where 1=1
+      <if test="code != null">
+       and code = #{code,jdbcType=VARCHAR}
+      </if>
+      <if test="codes!=null">
+        and code in (
+        <foreach collection="codes" item="code" separator=",">
+          #{code}
+        </foreach>
+        )
+      </if>
+      <if test="finDate != null">
+        and fin_date = #{finDate,jdbcType=DATE}
+      </if>
+
+      <if test="finType != null">
+        and fin_type = #{finType,jdbcType=INTEGER}
+      </if>
+
+      <if test="yyzsrtbzz != null">
+       and  yyzsrtbzz &gt;= #{yyzsrtbzz,jdbcType=DOUBLE}
+      </if>
+      <if test="gsjlrtbzz != null">
+        and gsjlrtbzz &gt;= #{gsjlrtbzz,jdbcType=DOUBLE}
+      </if>
+      <if test="kfjlrtbzz != null">
+        and kfjlrtbzz &gt;= #{kfjlrtbzz,jdbcType=DOUBLE}
+      </if>
+
+      <if test="fundHolding != null">
+        and fund_holding &gt;= #{fundHolding,jdbcType=DOUBLE}
+      </if>
+      <if test="isexpected != null">
+        and isExpected = #{isexpected,jdbcType=INTEGER}
+      </if>
+      <if test="ssr2 != null">
+        and ssr_2 &gt;= #{ssr2,jdbcType=DOUBLE}
+      </if>
+      <if test="ssr8 != null">
+        and ssr_8 &gt;= #{ssr8,jdbcType=DOUBLE}
+      </if>
+      <if test="sbHolding != null">
+        and sb_holding &gt;= #{sbHolding,jdbcType=DOUBLE},
+      </if>
+       order by id
+      limit #{offset},#{pageSize}
+  </select>
+
+
+  <select id="selectByCode" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from share_data_finance
+    where code=#{code}
+    and  fin_type=#{type}
+    order by fin_date desc
+    limit #{days}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from share_data_finance
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.flwm.dal.dao.FinanceDO">
+    insert into share_data_finance (id, code, fin_date, 
+      fin_year, fin_season, fin_type, 
+      jll, mll, jbmgsy, mgjyxjl, 
+      gsjlr, kfjlr, yyzsr, yyzsrtbzz, 
+      gsjlrtbzz, kfjlrtbzz, jbmgsytbzz, 
+      fund_holding, isExpected, season_ma2, 
+      season_ma8, ssr_2, ssr_8, 
+      sb_holding)
+    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{finDate,jdbcType=DATE}, 
+      #{finYear,jdbcType=INTEGER}, #{finSeason,jdbcType=INTEGER}, #{finType,jdbcType=INTEGER}, 
+      #{jll,jdbcType=DOUBLE}, #{mll,jdbcType=DOUBLE}, #{jbmgsy,jdbcType=DOUBLE}, #{mgjyxjl,jdbcType=DOUBLE}, 
+      #{gsjlr,jdbcType=DOUBLE}, #{kfjlr,jdbcType=DOUBLE}, #{yyzsr,jdbcType=DOUBLE}, #{yyzsrtbzz,jdbcType=DOUBLE}, 
+      #{gsjlrtbzz,jdbcType=DOUBLE}, #{kfjlrtbzz,jdbcType=DOUBLE}, #{jbmgsytbzz,jdbcType=DOUBLE}, 
+      #{fundHolding,jdbcType=DOUBLE}, #{isexpected,jdbcType=INTEGER}, #{seasonMa2,jdbcType=DOUBLE}, 
+      #{seasonMa8,jdbcType=DOUBLE}, #{ssr2,jdbcType=DOUBLE}, #{ssr8,jdbcType=DOUBLE}, 
+      #{sbHolding,jdbcType=DOUBLE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.flwm.dal.dao.FinanceDO">
+    insert into share_data_finance
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="code != null">
+        code,
+      </if>
+      <if test="finDate != null">
+        fin_date,
+      </if>
+      <if test="finYear != null">
+        fin_year,
+      </if>
+      <if test="finSeason != null">
+        fin_season,
+      </if>
+      <if test="finType != null">
+        fin_type,
+      </if>
+      <if test="jll != null">
+        jll,
+      </if>
+      <if test="mll != null">
+        mll,
+      </if>
+      <if test="jbmgsy != null">
+        jbmgsy,
+      </if>
+      <if test="mgjyxjl != null">
+        mgjyxjl,
+      </if>
+      <if test="gsjlr != null">
+        gsjlr,
+      </if>
+      <if test="kfjlr != null">
+        kfjlr,
+      </if>
+      <if test="yyzsr != null">
+        yyzsr,
+      </if>
+      <if test="yyzsrtbzz != null">
+        yyzsrtbzz,
+      </if>
+      <if test="gsjlrtbzz != null">
+        gsjlrtbzz,
+      </if>
+      <if test="kfjlrtbzz != null">
+        kfjlrtbzz,
+      </if>
+      <if test="jbmgsytbzz != null">
+        jbmgsytbzz,
+      </if>
+      <if test="fundHolding != null">
+        fund_holding,
+      </if>
+      <if test="isexpected != null">
+        isExpected,
+      </if>
+      <if test="seasonMa2 != null">
+        season_ma2,
+      </if>
+      <if test="seasonMa8 != null">
+        season_ma8,
+      </if>
+      <if test="ssr2 != null">
+        ssr_2,
+      </if>
+      <if test="ssr8 != null">
+        ssr_8,
+      </if>
+      <if test="sbHolding != null">
+        sb_holding,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="finDate != null">
+        #{finDate,jdbcType=DATE},
+      </if>
+      <if test="finYear != null">
+        #{finYear,jdbcType=INTEGER},
+      </if>
+      <if test="finSeason != null">
+        #{finSeason,jdbcType=INTEGER},
+      </if>
+      <if test="finType != null">
+        #{finType,jdbcType=INTEGER},
+      </if>
+      <if test="jll != null">
+        #{jll,jdbcType=DOUBLE},
+      </if>
+      <if test="mll != null">
+        #{mll,jdbcType=DOUBLE},
+      </if>
+      <if test="jbmgsy != null">
+        #{jbmgsy,jdbcType=DOUBLE},
+      </if>
+      <if test="mgjyxjl != null">
+        #{mgjyxjl,jdbcType=DOUBLE},
+      </if>
+      <if test="gsjlr != null">
+        #{gsjlr,jdbcType=DOUBLE},
+      </if>
+      <if test="kfjlr != null">
+        #{kfjlr,jdbcType=DOUBLE},
+      </if>
+      <if test="yyzsr != null">
+        #{yyzsr,jdbcType=DOUBLE},
+      </if>
+      <if test="yyzsrtbzz != null">
+        #{yyzsrtbzz,jdbcType=DOUBLE},
+      </if>
+      <if test="gsjlrtbzz != null">
+        #{gsjlrtbzz,jdbcType=DOUBLE},
+      </if>
+      <if test="kfjlrtbzz != null">
+        #{kfjlrtbzz,jdbcType=DOUBLE},
+      </if>
+      <if test="jbmgsytbzz != null">
+        #{jbmgsytbzz,jdbcType=DOUBLE},
+      </if>
+      <if test="fundHolding != null">
+        #{fundHolding,jdbcType=DOUBLE},
+      </if>
+      <if test="isexpected != null">
+        #{isexpected,jdbcType=INTEGER},
+      </if>
+      <if test="seasonMa2 != null">
+        #{seasonMa2,jdbcType=DOUBLE},
+      </if>
+      <if test="seasonMa8 != null">
+        #{seasonMa8,jdbcType=DOUBLE},
+      </if>
+      <if test="ssr2 != null">
+        #{ssr2,jdbcType=DOUBLE},
+      </if>
+      <if test="ssr8 != null">
+        #{ssr8,jdbcType=DOUBLE},
+      </if>
+      <if test="sbHolding != null">
+        #{sbHolding,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.flwm.dal.dao.FinanceDO">
+    update share_data_finance
+    <set>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="finDate != null">
+        fin_date = #{finDate,jdbcType=DATE},
+      </if>
+      <if test="finYear != null">
+        fin_year = #{finYear,jdbcType=INTEGER},
+      </if>
+      <if test="finSeason != null">
+        fin_season = #{finSeason,jdbcType=INTEGER},
+      </if>
+      <if test="finType != null">
+        fin_type = #{finType,jdbcType=INTEGER},
+      </if>
+      <if test="jll != null">
+        jll = #{jll,jdbcType=DOUBLE},
+      </if>
+      <if test="mll != null">
+        mll = #{mll,jdbcType=DOUBLE},
+      </if>
+      <if test="jbmgsy != null">
+        jbmgsy = #{jbmgsy,jdbcType=DOUBLE},
+      </if>
+      <if test="mgjyxjl != null">
+        mgjyxjl = #{mgjyxjl,jdbcType=DOUBLE},
+      </if>
+      <if test="gsjlr != null">
+        gsjlr = #{gsjlr,jdbcType=DOUBLE},
+      </if>
+      <if test="kfjlr != null">
+        kfjlr = #{kfjlr,jdbcType=DOUBLE},
+      </if>
+      <if test="yyzsr != null">
+        yyzsr = #{yyzsr,jdbcType=DOUBLE},
+      </if>
+      <if test="yyzsrtbzz != null">
+        yyzsrtbzz = #{yyzsrtbzz,jdbcType=DOUBLE},
+      </if>
+      <if test="gsjlrtbzz != null">
+        gsjlrtbzz = #{gsjlrtbzz,jdbcType=DOUBLE},
+      </if>
+      <if test="kfjlrtbzz != null">
+        kfjlrtbzz = #{kfjlrtbzz,jdbcType=DOUBLE},
+      </if>
+      <if test="jbmgsytbzz != null">
+        jbmgsytbzz = #{jbmgsytbzz,jdbcType=DOUBLE},
+      </if>
+      <if test="fundHolding != null">
+        fund_holding = #{fundHolding,jdbcType=DOUBLE},
+      </if>
+      <if test="isexpected != null">
+        isExpected = #{isexpected,jdbcType=INTEGER},
+      </if>
+      <if test="seasonMa2 != null">
+        season_ma2 = #{seasonMa2,jdbcType=DOUBLE},
+      </if>
+      <if test="seasonMa8 != null">
+        season_ma8 = #{seasonMa8,jdbcType=DOUBLE},
+      </if>
+      <if test="ssr2 != null">
+        ssr_2 = #{ssr2,jdbcType=DOUBLE},
+      </if>
+      <if test="ssr8 != null">
+        ssr_8 = #{ssr8,jdbcType=DOUBLE},
+      </if>
+      <if test="sbHolding != null">
+        sb_holding = #{sbHolding,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.flwm.dal.dao.FinanceDO">
+    update share_data_finance
+    set code = #{code,jdbcType=VARCHAR},
+      fin_date = #{finDate,jdbcType=DATE},
+      fin_year = #{finYear,jdbcType=INTEGER},
+      fin_season = #{finSeason,jdbcType=INTEGER},
+      fin_type = #{finType,jdbcType=INTEGER},
+      jll = #{jll,jdbcType=DOUBLE},
+      mll = #{mll,jdbcType=DOUBLE},
+      jbmgsy = #{jbmgsy,jdbcType=DOUBLE},
+      mgjyxjl = #{mgjyxjl,jdbcType=DOUBLE},
+      gsjlr = #{gsjlr,jdbcType=DOUBLE},
+      kfjlr = #{kfjlr,jdbcType=DOUBLE},
+      yyzsr = #{yyzsr,jdbcType=DOUBLE},
+      yyzsrtbzz = #{yyzsrtbzz,jdbcType=DOUBLE},
+      gsjlrtbzz = #{gsjlrtbzz,jdbcType=DOUBLE},
+      kfjlrtbzz = #{kfjlrtbzz,jdbcType=DOUBLE},
+      jbmgsytbzz = #{jbmgsytbzz,jdbcType=DOUBLE},
+      fund_holding = #{fundHolding,jdbcType=DOUBLE},
+      isExpected = #{isexpected,jdbcType=INTEGER},
+      season_ma2 = #{seasonMa2,jdbcType=DOUBLE},
+      season_ma8 = #{seasonMa8,jdbcType=DOUBLE},
+      ssr_2 = #{ssr2,jdbcType=DOUBLE},
+      ssr_8 = #{ssr8,jdbcType=DOUBLE},
+      sb_holding = #{sbHolding,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

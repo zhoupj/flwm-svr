@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flwm.dal.mapper.UserShareDOMapper">
+  <resultMap id="BaseResultMap" type="com.flwm.dal.dao.UserShareDO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="share_code" jdbcType="VARCHAR" property="shareCode" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="remove_time" jdbcType="TIMESTAMP" property="removeTime" />
+    <result column="inc_flu" jdbcType="DOUBLE" property="incFlu" />
+    <result column="s_group" jdbcType="INTEGER" property="sGroup" />
+    <result column="tag" jdbcType="VARCHAR" property="tag" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.flwm.dal.dao.UserShareDO">
+    <result column="feature" jdbcType="LONGVARCHAR" property="feature" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, share_code, add_time, remove_time, inc_flu, s_group, tag
+  </sql>
+  <sql id="Blob_Column_List">
+    feature
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from share_user_share_sel
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByCond" parameterType="com.flwm.common.domain.UserShareRequest" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from share_user_share_sel
+    where 1=1
+    <if test="userId != null">
+     and  user_id = #{userId,jdbcType=INTEGER}
+    </if>
+    <if test="shareCode != null">
+      and share_code = #{shareCode,jdbcType=VARCHAR}
+    </if>
+    <if test="sGroup != null">
+      and s_group = #{sGroup,jdbcType=INTEGER}
+    </if>
+    limit 100
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from share_user_share_sel
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.flwm.dal.dao.UserShareDO">
+    insert into share_user_share_sel (id, user_id, share_code,
+      add_time, remove_time, inc_flu,
+      s_group, tag, feature
+      )
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{shareCode,jdbcType=VARCHAR},
+      #{addTime,jdbcType=TIMESTAMP}, #{removeTime,jdbcType=TIMESTAMP}, #{incFlu,jdbcType=DOUBLE},
+      #{sGroup,jdbcType=INTEGER}, #{tag,jdbcType=VARCHAR}, #{feature,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.flwm.dal.dao.UserShareDO">
+    insert into share_user_share_sel
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="shareCode != null">
+        share_code,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="removeTime != null">
+        remove_time,
+      </if>
+      <if test="incFlu != null">
+        inc_flu,
+      </if>
+      <if test="sGroup != null">
+        s_group,
+      </if>
+      <if test="tag != null">
+        tag,
+      </if>
+      <if test="feature != null">
+        feature,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="shareCode != null">
+        #{shareCode,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="removeTime != null">
+        #{removeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="incFlu != null">
+        #{incFlu,jdbcType=DOUBLE},
+      </if>
+      <if test="sGroup != null">
+        #{sGroup,jdbcType=INTEGER},
+      </if>
+      <if test="tag != null">
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="feature != null">
+        #{feature,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.flwm.dal.dao.UserShareDO">
+    update share_user_share_sel
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="shareCode != null">
+        share_code = #{shareCode,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="removeTime != null">
+        remove_time = #{removeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="incFlu != null">
+        inc_flu = #{incFlu,jdbcType=DOUBLE},
+      </if>
+      <if test="sGroup != null">
+        s_group = #{sGroup,jdbcType=INTEGER},
+      </if>
+      <if test="tag != null">
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="feature != null">
+        feature = #{feature,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.flwm.dal.dao.UserShareDO">
+    update share_user_share_sel
+    set user_id = #{userId,jdbcType=INTEGER},
+      share_code = #{shareCode,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      remove_time = #{removeTime,jdbcType=TIMESTAMP},
+      inc_flu = #{incFlu,jdbcType=DOUBLE},
+      s_group = #{sGroup,jdbcType=INTEGER},
+      tag = #{tag,jdbcType=VARCHAR},
+      feature = #{feature,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.flwm.dal.dao.UserShareDO">
+    update share_user_share_sel
+    set user_id = #{userId,jdbcType=INTEGER},
+      share_code = #{shareCode,jdbcType=VARCHAR},
+      add_time = #{addTime,jdbcType=TIMESTAMP},
+      remove_time = #{removeTime,jdbcType=TIMESTAMP},
+      inc_flu = #{incFlu,jdbcType=DOUBLE},
+      s_group = #{sGroup,jdbcType=INTEGER},
+      tag = #{tag,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flwm.dal.mapper.SearchMapper">
+
+    <sql id="searchData">
+    trade_date as tradeDate,fin_date as finDate, a.code, open, high, low, close, volume, turn, totals,
+    isHighOfYear, rps120, rps250, fluOf250d,  diffToHigh250,
+    peTTM,  hk_holding_amount as hkHoldingAmount,incOf2d,fund_holding as fundHolding,ssr_2 as ssr2
+  </sql>
+
+    <sql id="kWhere">
+        where 1=1
+        <if test="tradeDate!=null">
+            and trade_date = #{tradeDate}
+        </if>
+        <if test="lastest!=null and code !=null">
+            and trade_date=(select trade_date from share_data_day where code=#{code} order by trade_date desc limit 1)
+        </if>
+        <if test="code != null">
+            and code = #{code,jdbcType=VARCHAR}
+        </if>
+        <if test="codes != null and codes.size>0">
+            and code in
+            <foreach collection="codes" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="turn != null">
+            and turn &lt;= #{turn,jdbcType=DOUBLE}
+        </if>
+        <if test="totals != null">
+            and totals &lt;= #{totals,jdbcType=DOUBLE}
+        </if>
+        <if test="ishighofyear != null">
+            and isHighOfYear = #{ishighofyear,jdbcType=INTEGER}
+        </if>
+
+        <if test="rps120 != null">
+            and rps120 &gt;= #{rps120,jdbcType=DOUBLE}
+        </if>
+        <if test="rps250 != null">
+            and rps250 &gt;= #{rps250,jdbcType=DOUBLE}
+        </if>
+        <if test="rps50 != null">
+            and rps50 &gt;= #{rps50,jdbcType=DOUBLE}
+        </if>
+        <if test="fluof250d != null">
+            and fluOf250d &lt;= #{fluof250d,jdbcType=DOUBLE}
+        </if>
+        <if test="fluof120d != null">
+            and fluOf120d &lt;= #{fluof120d,jdbcType=DOUBLE}
+        </if>
+        <if test="fluof80d != null">
+            and fluOf80d &lt;= #{fluof80d,jdbcType=DOUBLE}
+        </if>
+        <if test="fluof10d != null">
+            and fluOf10d &lt;= #{fluof10d,jdbcType=DOUBLE}
+        </if>
+
+        <if test="difftohigh250 != null">
+            and diffToHigh250 &lt;= #{difftohigh250,jdbcType=DOUBLE}
+        </if>
+
+        <if test="closeGreaterTo50!=null and closeGreaterTo50==1">
+            and close > ma50
+        </if>
+
+        <if test="pettm != null">
+            and peTTM &lt;= #{pettm,jdbcType=DOUBLE}
+        </if>
+
+        <if test="hkHoldingAmount != null">
+            and hk_holding_amount &gt;= #{hkHoldingAmount,jdbcType=DOUBLE}
+        </if>
+        <if test="hkHoldingRatio != null">
+            and hk_holding_ratio &gt;= #{hkHoldingRatio,jdbcType=DOUBLE}
+        </if>
+        <if test="code != null">
+            and b.code = #{code,jdbcType=VARCHAR}
+            and fin_date = (select fin_date from share_data_finance where code=#{code} order by fin_date desc limit 1 )
+        </if>
+        <if test="code==null">
+            and fin_date = #{finDate}
+        </if>
+
+        <if test="fundHolding != null">
+            and fund_holding &gt;= #{fundHolding,jdbcType=DOUBLE}
+        </if>
+
+        <if test="ssr2 != null">
+            and ssr_2 &gt;= #{ssr2,jdbcType=DOUBLE}
+        </if>
+
+
+    </sql>
+
+    <select id="selectByCond" parameterType="com.flwm.common.domain.SearchRequest"
+            resultType="com.flwm.common.VO.SearchVO">
+        select
+        <include refid="searchData"/>
+        from share_data_day a
+        join share_data_finance b
+        on a.code=b.code
+        <include refid="kWhere"/>
+        order by a.code
+        limit #{offset},#{pageSize}
+    </select>
+
+    <select id="selectCountByCond" parameterType="com.flwm.common.domain.SearchRequest"
+            resultType="java.lang.Long">
+        select
+         count(*)
+        from share_data_day a
+        join share_data_finance b
+        on a.code=b.code
+        <include refid="kWhere"/>
+    </select>
+
+
+</mapper>

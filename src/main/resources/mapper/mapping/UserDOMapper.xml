@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flwm.dal.mapper.UserDOMapper">
+  <resultMap id="BaseResultMap" type="com.flwm.dal.dao.UserDO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="open_id" jdbcType="VARCHAR" property="openId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="alias" jdbcType="VARCHAR" property="alias" />
+    <result column="is_member" jdbcType="INTEGER" property="isMember" />
+    <result column="member_deadline" jdbcType="DATE" property="memberDeadline" />
+    <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
+    <result column="login_days" jdbcType="INTEGER" property="loginDays" />
+    <result column="this_login_time" jdbcType="TIMESTAMP" property="thisLoginTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.flwm.dal.dao.UserDO">
+    <result column="feature" jdbcType="LONGVARCHAR" property="feature" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, open_id, name, alias, is_member, member_deadline, last_login_time, login_days, 
+    this_login_time
+  </sql>
+  <sql id="Blob_Column_List">
+    feature
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from share_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <select id="selectByOpenId" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from share_user
+    where open_id = #{openId}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from share_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.flwm.dal.dao.UserDO">
+    insert into share_user (id, open_id, name, 
+      alias, is_member, member_deadline, 
+      last_login_time, login_days, this_login_time, 
+      feature)
+    values (#{id,jdbcType=INTEGER}, #{openId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{alias,jdbcType=VARCHAR}, #{isMember,jdbcType=INTEGER}, #{memberDeadline,jdbcType=DATE}, 
+      #{lastLoginTime,jdbcType=TIMESTAMP}, #{loginDays,jdbcType=INTEGER}, #{thisLoginTime,jdbcType=TIMESTAMP}, 
+      #{feature,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.flwm.dal.dao.UserDO">
+    insert into share_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="openId != null">
+        open_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="alias != null">
+        alias,
+      </if>
+      <if test="isMember != null">
+        is_member,
+      </if>
+      <if test="memberDeadline != null">
+        member_deadline,
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time,
+      </if>
+      <if test="loginDays != null">
+        login_days,
+      </if>
+      <if test="thisLoginTime != null">
+        this_login_time,
+      </if>
+      <if test="feature != null">
+        feature,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="openId != null">
+        #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="alias != null">
+        #{alias,jdbcType=VARCHAR},
+      </if>
+      <if test="isMember != null">
+        #{isMember,jdbcType=INTEGER},
+      </if>
+      <if test="memberDeadline != null">
+        #{memberDeadline,jdbcType=DATE},
+      </if>
+      <if test="lastLoginTime != null">
+        #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginDays != null">
+        #{loginDays,jdbcType=INTEGER},
+      </if>
+      <if test="thisLoginTime != null">
+        #{thisLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="feature != null">
+        #{feature,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.flwm.dal.dao.UserDO">
+    update share_user
+    <set>
+      <if test="openId != null">
+        open_id = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="alias != null">
+        alias = #{alias,jdbcType=VARCHAR},
+      </if>
+      <if test="isMember != null">
+        is_member = #{isMember,jdbcType=INTEGER},
+      </if>
+      <if test="memberDeadline != null">
+        member_deadline = #{memberDeadline,jdbcType=DATE},
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginDays != null">
+        login_days = #{loginDays,jdbcType=INTEGER},
+      </if>
+      <if test="thisLoginTime != null">
+        this_login_time = #{thisLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="feature != null">
+        feature = #{feature,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.flwm.dal.dao.UserDO">
+    update share_user
+    set open_id = #{openId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      alias = #{alias,jdbcType=VARCHAR},
+      is_member = #{isMember,jdbcType=INTEGER},
+      member_deadline = #{memberDeadline,jdbcType=DATE},
+      last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      login_days = #{loginDays,jdbcType=INTEGER},
+      this_login_time = #{thisLoginTime,jdbcType=TIMESTAMP},
+      feature = #{feature,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.flwm.dal.dao.UserDO">
+    update share_user
+    set open_id = #{openId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      alias = #{alias,jdbcType=VARCHAR},
+      is_member = #{isMember,jdbcType=INTEGER},
+      member_deadline = #{memberDeadline,jdbcType=DATE},
+      last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      login_days = #{loginDays,jdbcType=INTEGER},
+      this_login_time = #{thisLoginTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
