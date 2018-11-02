@@ -25,12 +25,11 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 
         String requestUrl = request.getRequestURI();
 
-        System.out.println(requestUrl);
-
         if (requestUrl.equals("/login")
                 || requestUrl.equals("/index.html")
                 || requestUrl.equals("/index")
-                || requestUrl.equals("/")) {
+                || requestUrl.equals("/")
+                || requestUrl.equals("/search/list")) {
             return true;
         }
 

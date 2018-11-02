@@ -42,6 +42,8 @@ public class WebConfig extends WebMvcConfigurationSupport {
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
         registry.addResourceHandler("/**/*.js").addResourceLocations("/");
+        registry.addResourceHandler("**.ico").addResourceLocations("/");
+        registry.addResourceHandler("**.json").addResourceLocations("/");
         super.addResourceHandlers(registry);
     }
 

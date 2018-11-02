@@ -46,6 +46,24 @@ public class SearchServiceTest {
     }
 
     @Test
+    public void searchTest2() {
+
+        SearchRequest request = new SearchRequest();
+        request.setTradeDate("2018-10-31");
+        //request.setRps250(87);
+        request.setPageNo(0);
+        request.setPageSize(50);
+        // request.setDifftohigh250(25.0);
+        //request.setFundHolding(1.0);
+        request.setCode("603787");
+        List<SearchVO> vos = searchService.search(request);
+        Assert.assertTrue(vos.size() > 0);
+        System.out.println(JSON.toJSONString(vos));
+
+
+    }
+
+    @Test
     public void kTest() {
 
         List<ShapeVO> lst = searchService.queryShape("000860", 60);

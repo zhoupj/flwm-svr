@@ -22,7 +22,7 @@ public class IndexController {
     @RequestMapping(value = "/**")
     public String index(Model mv, HttpServletRequest request) {
 
-        System.out.println("拦截啦拦截啦拦截啦拦截啦拦截啦拦截啦:" + flwmConfig.getDomainName() + "," + flwmConfig.getEnv()+","+request.getRequestURI());
+        //System.out.println("拦截啦拦截啦拦截啦拦截啦拦截啦拦截啦:" + flwmConfig.getDomainName() + "," + flwmConfig.getEnv()+","+request.getRequestURI());
         mv.addAttribute("domain_name", flwmConfig.getDomainName());
 
         if (flwmConfig.getEnv().equals("dev")) {

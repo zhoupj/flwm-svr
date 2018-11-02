@@ -17,7 +17,7 @@
             and trade_date=(select trade_date from share_data_day where code=#{code} order by trade_date desc limit 1)
         </if>
         <if test="code != null">
-            and code = #{code,jdbcType=VARCHAR}
+            and a.code = #{code,jdbcType=VARCHAR}
         </if>
         <if test="codes != null and codes.size>0">
             and code in
