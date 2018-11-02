@@ -25,7 +25,7 @@ const columns = [{
 }, {
   title: '总市值',
   dataIndex: 'totals',
-  render: totals=>totals.toFixed(2) + '亿',
+  render: function(v){if(v!=null) {return v.toFixed(2) + '亿'}},
   sorter: (a, b) => a.totals - b.totals,
 }, {
   title: '差值',
@@ -53,7 +53,7 @@ const columns = [{
   title: '港资持仓',
   dataIndex: 'hkHoldingAmount',
   render: function (v) {
-    if (v > 10000) {
+    if (v!=null && v > 10000) {
       return (v / 10000).toFixed(2) + '亿';
     }
   }
@@ -101,7 +101,7 @@ class SearchCom extends Component {
 
 
   fetch = (params = {}) => {
-    console.log('params:', JSON.stringify(params));
+    //console.log('params:', JSON.stringify(params));
     this.setState({loading: true});
 
     axios({
@@ -111,7 +111,7 @@ class SearchCom extends Component {
       data: JSON.stringify(params),
       type: 'json',
     }).then((rst) => {
-      console.log(rst.data);
+      //console.log(rst.data);
       const result = rst.data;
       const pagination = {...this.state.pagination};
       // Read total count from server
