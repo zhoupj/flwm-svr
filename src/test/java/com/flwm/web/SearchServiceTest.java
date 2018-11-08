@@ -73,7 +73,7 @@ public class SearchServiceTest {
 
     @Test
     public void basicTest() {
-        Map<String, List<ProfitVO>> map = searchService.queryBasicInfo("000860", 10);
+        Map<String, List<ProfitVO>> map = searchService.queryBasicInfo("601339", 10);
         Assert.assertTrue(map.size() == 2);
         System.out.println(JSON.toJSONString(map));
     }

@@ -13,6 +13,9 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by zhoupj on 10/27/18.
@@ -20,28 +23,45 @@ import javax.servlet.http.HttpSession;
 @Slf4j
 public class SessionInterceptor extends HandlerInterceptorAdapter {
 
+
+    List<String> filterUrls = Arrays.asList("/login", "/index", "/login2", "/", "/logn");
+
+    List<String> memberUrls = Arrays.asList("/search");
+
+
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
 
         String requestUrl = request.getRequestURI();
 
-        if (requestUrl.equals("/login")
-                || requestUrl.equals("/index.html")
-                || requestUrl.equals("/index")
-                || requestUrl.equals("/")
-                || requestUrl.equals("/search/list")) {
+        if (filterUrls.contains(requestUrl)) {
             return true;
         }
 
-//        HttpSession session = request.getSession(false);
-//        if (session == null) {
-//            log.error("user not login for uer:" + requestUrl);
-//            throw new FMException(ErrorCodeEnum.USER_NOT_LOGIN);
-//        }
-//        UserDO user = (UserDO) session.getAttribute("user");
-//        if (user != null) {
-//            UserCache.setUser(user);
-//        }
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            log.error("user not login for user:" + requestUrl);
+            throw new FMException(ErrorCodeEnum.USER_NOT_LOGIN);
+            // response.sendRedirect("/login2");
+            // return false;
+        }
+
+        UserDO user = (UserDO) session.getAttribute("user");
+        if (user != null) {
+            UserCache.setUser(user);
+        } else {
+            throw new FMException(ErrorCodeEnum.USER_NOT_LOGIN);
+            //response.sendRedirect("/login2");
+            // return false;
+        }
+
+
+        if (requestUrl.startsWith("/search") && user.getIsMember() == null && user.getIsMember() != 1) {
+
+            throw new FMException(ErrorCodeEnum.USER_ACCOUNT_NOT_MEMBER);
+
+        }
+
         return true;
     }
 

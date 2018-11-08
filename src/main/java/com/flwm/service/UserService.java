@@ -48,6 +48,7 @@ public class UserService {
         userDO.setName(nickName);
         userDO.setThisLoginTime(new Date());
         userDO.setLoginDays(1);
+        userDO.setIsMember(0);
         userDOMapper.insertSelective(userDO);
     }
 

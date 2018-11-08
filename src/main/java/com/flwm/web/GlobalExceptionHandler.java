@@ -4,11 +4,13 @@ import com.flwm.common.domain.ErrorCodeEnum;
 import com.flwm.common.domain.FMException;
 import com.flwm.common.domain.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  * Created by zhoupj on 10/25/18.
  */
 @ControllerAdvice
+@Order(1)
 @Slf4j
 public class GlobalExceptionHandler {
 

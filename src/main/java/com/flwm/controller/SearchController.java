@@ -41,12 +41,12 @@ public class SearchController {
     @RequestMapping("/k")
     public List<ShapeVO> queryK(@RequestParam(value = "code") String code) {
 
-        return searchService.queryShape(code,120);
+        return searchService.queryShape(code,500);
     }
 
     @RequestMapping("/basic")
     public Map<String,List<ProfitVO>> queryBasic(@RequestParam(value = "code") String code) {
-        return searchService.queryBasicInfo(code,60);
+        return searchService.queryBasicInfo(code,12);
     }
 
     @RequestMapping("/tech")

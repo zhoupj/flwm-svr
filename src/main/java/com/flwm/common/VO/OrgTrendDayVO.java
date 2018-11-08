@@ -17,8 +17,8 @@ public class OrgTrendDayVO {
 
     public OrgTrendDayVO(DayLineDO dayLineDO){
         this.dt= DateUtil.getShortFormat(dayLineDO.getTradeDate());
-        this.hkr=dayLineDO.getHkHoldingRatio();
-        this.hkm=dayLineDO.getHkHoldingAmount();
+        this.hkr=dayLineDO.getHkHoldingRatio()==null?0:dayLineDO.getHkHoldingRatio();
+        this.hkm=dayLineDO.getHkHoldingAmount()==null?0:dayLineDO.getHkHoldingAmount();
     }
 
 }

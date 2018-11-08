@@ -2,10 +2,12 @@ package com.flwm.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.flwm.common.VO.UserVO;
 import com.flwm.common.config.FlwmConfig;
 import com.flwm.common.domain.ErrorCodeEnum;
 import com.flwm.common.domain.FMException;
 import com.flwm.common.util.HttpClientUtil;
+import com.flwm.common.util.ParamUtil;
 import com.flwm.dal.dao.UserDO;
 import com.flwm.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -34,52 +36,73 @@ public class LoginController {
     private static final String WX_URL = "https://api.weixin.qq.com/sns/jscode2session?appid=wx2e203dc8ee9f36b6&secret=e497e3a5cbbe52061ca0f627cebb63a3&js_code={0}&grant_type=authorization_code";
 
     @RequestMapping("/login")
-    public UserDO login(@RequestParam(value = "code") String code, String name, HttpServletRequest request) {
+    public UserVO login(@RequestParam(value = "code") String code, String name, HttpServletRequest request) {
 
-        String openId=getOpenId(code);
-        UserDO user=userService.getUser(openId);
-        if(user==null){
-            userService.saveUser(openId,name);
-            user=userService.getUser(openId);
-        }else{
+        String openId = getOpenId(code);
+        UserDO user = userService.getUser(openId);
+        if (user == null) {
+            userService.saveUser(openId, name);
+            user = userService.getUser(openId);
+        } else {
             userService.flushUserInfo(user.getId());
         }
         HttpSession session = request.getSession(true);
-        log.info("session id:"+ session.getId());
-        session.setAttribute("user",user);
-        return user;
+        log.info("session id:" + session.getId()+","+user.getOpenId());
+        session.setAttribute("user", user);
+        return UserVO.convert(user);
     }
 
 
-    private String getOpenId(String code){
+    @RequestMapping("/login2")
+    public UserVO login2(@RequestParam(value = "user") String name, @RequestParam(value = "pwd") String pwd, HttpServletRequest request) {
 
-        String url= MessageFormat.format(WX_URL,code);
 
-        System.out.println("code:"+code);
-        int retry=0;
-        do{
-            String body= HttpClientUtil.get(url);
+        if(!ParamUtil.isPhone(name)){
+            throw new FMException(ErrorCodeEnum.USER_NOT_REGISTER);
+        }
+        //openId 做账号,alias 做密码
+        UserDO user = userService.getUser(name);
+        if (user == null) {
+            throw new FMException(ErrorCodeEnum.USER_NOT_REGISTER);
+        }
+        if (!pwd.equals(user.getAlias())) {
+            throw new FMException(ErrorCodeEnum.USER_ACCOUNT_WRONG);
+        }
+
+        HttpSession session = request.getSession(true);
+        log.info("session id:" + session.getId()+","+user.getOpenId());
+        session.setAttribute("user", user);
+        return UserVO.convert(user);
+    }
+
+
+    private String getOpenId(String code) {
+
+        String url = MessageFormat.format(WX_URL, code);
+        int retry = 0;
+        do {
+            String body = HttpClientUtil.get(url);
             JSONObject jo = JSON.parseObject(body);
-            if(jo.get("errcode")==null){
-                String openId=(String)jo.get("openid");
+            if (jo.get("errcode") == null) {
+                String openId = (String) jo.get("openid");
                 //String sessionKey=(String)jo.get("session_key");
                 return openId;
-            }else{
-                log.error("request wx |"+body);
+            } else {
+                log.error("request wx |" + body);
             }
             retry++;
-        }while(retry<3);
+        } while (retry < 3);
 
-        if("prod".equals(flwmConfig.getEnv())){
+        if ("prod".equals(flwmConfig.getEnv())) {
             throw new FMException(ErrorCodeEnum.NETWORK_EXCEPTION);
-        }else{
+        } else {
             return "test";
         }
 
     }
 
     @RequestMapping("/quit")
-    public boolean logout( HttpServletRequest request){
+    public boolean logout(HttpServletRequest request) {
 
         HttpSession session = request.getSession(true);
         session.removeAttribute("user");

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Form, DatePicker,Input, Button,Row, Col,Tooltip,Icon,InputNumber,Table } from 'antd';
-import $ from 'jquery';
+import { Form, DatePicker, Button,Row, Col,Tooltip,Icon,InputNumber,Table,Popover } from 'antd';
 import './Search.css'
 import moment from 'moment';
-import axios from 'axios';
+import Ajax from '../common/req'
+import Util from '../common/lib'
 
 const FormItem = Form.Item;
 
@@ -11,8 +11,14 @@ const FormItem = Form.Item;
 const columns = [{
   title: '名称',
   dataIndex: 'name',
-  fixed: 'left'
-  //render: name => `${name.first} ${name.last}`,
+  fixed: 'left',
+  render: function (v, record) {
+    if (record != null) {
+      return (<Popover content={record.code} title="代码">
+        <a href={'/search/detail?code='+record.code+'&name='+record.name }> {v} </a>
+      </Popover>)
+    }
+  },
 
 }, {
   title: '行业',
@@ -25,7 +31,11 @@ const columns = [{
 }, {
   title: '总市值',
   dataIndex: 'totals',
-  render: function(v){if(v!=null) {return v.toFixed(2) + '亿'}},
+  render: function (v) {
+    if (v != null) {
+      return v.toFixed(2) + '亿'
+    }
+  },
   sorter: (a, b) => a.totals - b.totals,
 }, {
   title: '差值',
@@ -38,6 +48,7 @@ const columns = [{
 }, {
   title: 'RPS250',
   dataIndex: 'rps250',
+  sorter: (a, b) => a.rps250 - b.rps250,
 
 }, {
   title: 'SSR2',
@@ -53,9 +64,11 @@ const columns = [{
   title: '港资持仓',
   dataIndex: 'hkHoldingAmount',
   render: function (v) {
-    if (v!=null && v > 10000) {
+    if (v != null && v > 10000) {
       return (v / 10000).toFixed(2) + '亿';
-    }
+    }else if(v!=null){
+      return v.toFixed(2) + '万'
+    }else return '0'
   }
 
 }, {
@@ -103,34 +116,23 @@ class SearchCom extends Component {
   fetch = (params = {}) => {
     //console.log('params:', JSON.stringify(params));
     this.setState({loading: true});
-
-    axios({
-      url: '/search/list',
-      method: 'post',
-      headers: {'Content-type': 'application/json'},
-      data: JSON.stringify(params),
-      type: 'json',
-    }).then((rst) => {
-      //console.log(rst.data);
-      const result = rst.data;
-      const pagination = {...this.state.pagination};
-      // Read total count from server
-      // pagination.total = data.totalCount;
-      pagination.total = result.total;
-
-      if (result['code'] === '1001') {
-        this.setState({
+    const pagination = {...this.state.pagination};
+    var that = this;
+    Ajax('/search/list', JSON.stringify(params),
+      function (result) {
+        pagination.total = result.total;
+        that.setState({
           data: result.data,
           pagination,
         });
-      }
-      this.setState({loading: false});
-    });
+      },true);
+    this.setState({loading: false});
   }
 
-  //componentDidMount() {
-  //  this.fetch();
-  //}
+
+//componentDidMount() {
+//  this.fetch();
+//}
 
 
   handleSearch = (e) => {
@@ -163,10 +165,11 @@ class SearchCom extends Component {
 
 
     const dateFormat = 'YYYY-MM-DD';
+    var yesterday = Util.getYesterday();
 
     const config = {
       rules: [{type: 'object', required: true, message: 'Please select date!'}],
-      initialValue: moment('2018-10-25', dateFormat),
+      initialValue: moment(yesterday, dateFormat),
     };
 
     return (

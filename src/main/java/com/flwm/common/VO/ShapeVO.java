@@ -27,10 +27,10 @@ public class ShapeVO {
         this.close=dayLineDO.getClose();
         this.high=dayLineDO.getHigh();
         this.low=dayLineDO.getLow();
-        this.ma10=dayLineDO.getMa10();
+      /*  this.ma10=dayLineDO.getMa10();
         this.ma50=dayLineDO.getMa50();
         this.ma120=dayLineDO.getMa120();
-        this.ma250=dayLineDO.getMa250();
+        this.ma250=dayLineDO.getMa250();*/
 
 
     }

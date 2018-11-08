@@ -26,7 +26,20 @@ public class IndexController {
         mv.addAttribute("domain_name", flwmConfig.getDomainName());
 
         if (flwmConfig.getEnv().equals("dev")) {
-            return "index_dev";
+            return "index";
+        } else {
+            return "index";
+        }
+    }
+
+    @RequestMapping(value = "/logn")
+    public String login(Model mv, HttpServletRequest request) {
+
+        //System.out.println("拦截啦拦截啦拦截啦拦截啦拦截啦拦截啦:" + flwmConfig.getDomainName() + "," + flwmConfig.getEnv()+","+request.getRequestURI());
+        mv.addAttribute("domain_name", flwmConfig.getDomainName());
+
+        if (flwmConfig.getEnv().equals("dev")) {
+            return "index";
         } else {
             return "index";
         }

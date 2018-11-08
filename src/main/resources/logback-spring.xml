@@ -73,12 +73,12 @@
         <appender-ref ref="DIGEST"/>
     </logger>
 
-    <logger name="org.mybatis.spring" level="DEBUG" additivity="false">
-        <appender-ref ref="CONSOLE"/>
+   <logger name="org.mybatis.spring" level="INFO" additivity="false">-->
+       <appender-ref ref="CONSOLE"/>
     </logger>
 
     <!--默认日志-->
-    <logger name="com.flwm" level="INFO" additivity="false">
+    <logger name="com.flwm" level="INFO">
         <appender-ref ref="APP"/>
         <appender-ref ref="ERROR"/>
     </logger>

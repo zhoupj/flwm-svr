@@ -1,10 +1,12 @@
 import './App.css';
 import React, { Component } from 'react';
-import { Layout, Menu, Breadcrumb } from 'antd';
+import { Layout, Menu } from 'antd';
 import { Link} from 'react-router-dom';
 import { BrowserRouter,Route,Redirect,Switch } from 'react-router-dom';
 import Home from './flwm/Home';
 import Search from './flwm/Search';
+import Detail from './flwm/Detail'
+import  Login from './flwm/Login'
 const { Header, Content, Footer } = Layout;
 
 
@@ -26,12 +28,14 @@ const BaseLayout = ()=>(
 
 
     <Content style={{ padding: '0 50px', marginTop: 64 }}>
-      <div style={{ background: '#fff', padding: 24, minHeight: 380 }}>
+      <div style={{ background: '#fff', padding: 24, minHeight: 480 }}>
         <Switch>
           <Route path="/" exact component={Home}/>
           <Route path="/index" component={Home}/>
-          <Route path="/search" component={Search}/>
-          <Redirect to="/"/>
+          <Route path="/search" exact component={Search}/>
+          <Route path="/search/detail" component={Detail}/>
+          <Route path="/logn" component={Login}/>
+          <Redirect to="/index"/>
         </Switch>
       </div>
     </Content>

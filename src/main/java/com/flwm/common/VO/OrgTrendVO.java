@@ -16,8 +16,8 @@ public class OrgTrendVO {
 
     public OrgTrendVO(FinanceDO financeDO){
         this.dt= DateUtil.getShortFormat(financeDO.getFinDate());
-        this.fur=financeDO.getFundHolding();
-        this.sbr=financeDO.getSbHolding();
+        this.fur=financeDO.getFundHolding()==null?0:financeDO.getFundHolding();
+        this.sbr=financeDO.getSbHolding()==null?0:financeDO.getSbHolding();
 
     }
 
