@@ -8,6 +8,7 @@ import com.flwm.dal.dao.UserDO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,15 +27,15 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 
     List<String> filterUrls = Arrays.asList("/login", "/index", "/login2", "/", "/logn");
 
-    List<String> memberUrls = Arrays.asList("/search");
 
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
 
         String requestUrl = request.getRequestURI();
+        String method = request.getMethod();
 
-        if (filterUrls.contains(requestUrl)) {
+        if (filterUrls.contains(requestUrl) || method.equalsIgnoreCase("get")) {
             return true;
         }
 

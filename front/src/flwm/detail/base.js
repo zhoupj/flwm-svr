@@ -45,8 +45,8 @@ class Base extends Component {
     var ss2=jp.query(data, '$[*].s2');
     var ss8 = jp.query(data, '$[*].s8');
 
-    var max = Math.ceil(Math.max(ss2.max(),ss8.max()));
-    var inter=Math.round( max/10 * 10) / 10;
+    var max =100;// Math.ceil(Math.max(ss2.max(),ss8.max()));
+    var inter=10;//Math.round( max/10 * 10) / 10;
 
     //https://www.cnblogs.com/goloving/p/9113830.html
     // 基于准备好的dom，初始化echarts实例

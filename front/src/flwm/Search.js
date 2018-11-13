@@ -239,9 +239,22 @@ class SearchCom extends Component {
             <Col span={6}>
               <FormItem
                 {...formItemLayout}
-                label="RPS(>=)"
+                label="RPS250(>=)"
               >
                 {getFieldDecorator('rps250', {initialValue: 87})(
+                  <InputNumber
+                    min={0}
+                    max={100}
+                  />
+                )}
+              </FormItem>
+            </Col>
+            <Col span={6}>
+              <FormItem
+                {...formItemLayout}
+                label="RPS50(>=)"
+              >
+                {getFieldDecorator('rps50', {initialValue: 87})(
                   <InputNumber
                     min={0}
                     max={100}
@@ -292,6 +305,26 @@ class SearchCom extends Component {
                 )}
               </FormItem>
             </Col>
+
+          </Row>
+          <Row type="flex" justify="start">
+
+            <Col span={6}>
+              <FormItem
+                {...formItemLayout}
+                label="波动率(<=)"
+              >
+                {getFieldDecorator('fluof250d', {initialValue: 25})(
+                  <InputNumber
+                    min={0}
+                    max={100}
+                    formatter={value => `${value}%`}
+                    parser={value => value.replace('%', '')}
+                  />
+                )}
+              </FormItem>
+            </Col>
+
             <Col span={6}>
               <FormItem
                 {...formItemLayout}
@@ -307,8 +340,6 @@ class SearchCom extends Component {
                 )}
               </FormItem>
             </Col>
-          </Row>
-          <Row type="flex" justify="start">
 
             <Col span={6}>
               <FormItem

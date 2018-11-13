@@ -17,6 +17,7 @@ public class TechVO {
 
     private Double rps120;
     private Double rps250;
+    private Double rps50;
 
     private Double turn;
     private Double turn50;
@@ -25,6 +26,7 @@ public class TechVO {
 
     private Double f250;
     private Double f120;
+    private Double f80;
     private Double f10;
 
     private Double d250;
@@ -34,6 +36,7 @@ public class TechVO {
     public TechVO(DayLineDO dayLineDO){
         this.dt= DateUtil.getShortFormat(dayLineDO.getTradeDate());
         this.totals=dayLineDO.getTotals()==null?0:dayLineDO.getTotals();
+        this.rps50=dayLineDO.getRps50()==null?0:dayLineDO.getRps50();
         this.rps120=dayLineDO.getRps120()==null?0:dayLineDO.getRps120();
         this.rps250=dayLineDO.getRps250()==null?0:dayLineDO.getRps250();
         this.turn=dayLineDO.getTurn()==null?0:dayLineDO.getTurn();
@@ -41,9 +44,12 @@ public class TechVO {
         this.pettm=dayLineDO.getPettm()==null?0:dayLineDO.getPettm();
         this.f120=dayLineDO.getFluof120d()==null?0:dayLineDO.getFluof120d();
         this.f250=dayLineDO.getFluof250d()==null?0:dayLineDO.getFluof250d();
+        this.f80=dayLineDO.getFluof80d()==null?0:dayLineDO.getFluof80d();
         this.f10=dayLineDO.getFluof10d()==null?0:dayLineDO.getFluof10d();
         this.d250=dayLineDO.getDifftohigh250()==null?0:dayLineDO.getDifftohigh250();
         this.d120=dayLineDO.getDifftohigh120()==null?0:dayLineDO.getDifftohigh120();
+
+
     }
 
 

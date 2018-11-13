@@ -42,9 +42,12 @@ class Tech extends Component {
     var dates = jp.query(data, '$[*].dt');
     var v1 = jp.query(data, '$[*].rps120');
     var v2 = jp.query(data, '$[*].rps250');
+    var v3 = jp.query(data, '$[*].rps50');
 
-    var max = Math.ceil(Math.max(v1.max(),v2.max()));
-    var inter=Math.round( max/10 * 10) / 10;
+    var max = 100;
+      //Math.ceil(Math.max(v1.max(),v2.max()));
+    var inter=5;
+      //Math.round( max/10 * 10) / 10;
 
     //https://www.cnblogs.com/goloving/p/9113830.html
     // 基于准备好的dom，初始化echarts实例
@@ -70,7 +73,7 @@ class Tech extends Component {
       //  }
       //},
       legend: {
-        data: ['RPS120', 'RPS250']
+        data: ['RPS120', 'RPS250','RPS50']
       },
       //grid: {
       //  left: '3%',
@@ -102,6 +105,11 @@ class Tech extends Component {
           name: 'RPS250',
           type: 'line',
           data: v2
+        },
+        {
+          name: 'RPS50',
+          type: 'line',
+          data: v3
         }
       ]
     });
@@ -183,7 +191,9 @@ class Tech extends Component {
     var dates = jp.query(data, '$[*].dt');
     var v1 = jp.query(data, '$[*].f250');
     var v2 = jp.query(data, '$[*].f120');
+    var v4 = jp.query(data, '$[*].f80');
     var v3 = jp.query(data, '$[*].f10');
+
 
     var max = Math.ceil(v1.max());
     var inter=Math.floor(max/10);
@@ -212,7 +222,7 @@ class Tech extends Component {
       //  }
       //},
       legend: {
-        data: ['一年波动率', '半年波动率', '10日波动率']
+        data: ['一年波动率', '半年波动率', '80日波动率','10日波动率']
       },
       //grid: {
       //  left: '3%',
@@ -244,6 +254,11 @@ class Tech extends Component {
           name: '半年波动率',
           type: 'line',
           data: v2
+        },
+        {
+          name: '80日波动率',
+          type: 'line',
+          data: v4
         },
         {
           name: '10日波动率',

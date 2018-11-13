@@ -7,9 +7,7 @@ import com.flwm.dal.mapper.ActivityDOMapper;
 import com.flwm.service.ActivityService;
 import com.flwm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,19 +15,19 @@ import java.util.List;
  * Created by zhoupj on 10/28/18.
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping(value = "/user",method = RequestMethod.POST)
 public class UserController {
     @Autowired
     private ActivityService activityService;
     @Autowired
     private UserService userService;
 
-    @RequestMapping("/activity")
+    @PostMapping("/activity")
     public List<ActivityDO> getMemberActivity() {
         return activityService.getAll();
     }
 
-    @RequestMapping("/buy_member")
+    @PostMapping("/buy_member")
     public boolean buyMember(@RequestParam(value = "actId") Integer actId){
 
         UserDO user= UserCache.getUser();
@@ -37,7 +35,7 @@ public class UserController {
         return true;
     }
 
-    @RequestMapping("/suggest")
+    @PostMapping("/suggest")
     public boolean buyMember(@RequestParam(value = "txt") String txt){
         UserDO user= UserCache.getUser();
         userService.suggest(user.getId(),txt);

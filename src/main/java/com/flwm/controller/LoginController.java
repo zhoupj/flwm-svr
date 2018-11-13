@@ -12,6 +12,7 @@ import com.flwm.dal.dao.UserDO;
 import com.flwm.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +36,7 @@ public class LoginController {
 
     private static final String WX_URL = "https://api.weixin.qq.com/sns/jscode2session?appid=wx2e203dc8ee9f36b6&secret=e497e3a5cbbe52061ca0f627cebb63a3&js_code={0}&grant_type=authorization_code";
 
-    @RequestMapping("/login")
+    @PostMapping("/login")
     public UserVO login(@RequestParam(value = "code") String code, String name, HttpServletRequest request) {
 
         String openId = getOpenId(code);
@@ -53,7 +54,7 @@ public class LoginController {
     }
 
 
-    @RequestMapping("/login2")
+    @PostMapping("/login2")
     public UserVO login2(@RequestParam(value = "user") String name, @RequestParam(value = "pwd") String pwd, HttpServletRequest request) {
 
 
@@ -101,7 +102,7 @@ public class LoginController {
 
     }
 
-    @RequestMapping("/quit")
+    @PostMapping("/quit")
     public boolean logout(HttpServletRequest request) {
 
         HttpSession session = request.getSession(true);

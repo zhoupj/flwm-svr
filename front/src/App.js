@@ -9,7 +9,6 @@ import Detail from './flwm/Detail'
 import  Login from './flwm/Login'
 const { Header, Content, Footer } = Layout;
 
-
 const BaseLayout = ()=>(
   <Layout>
     <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
@@ -34,7 +33,7 @@ const BaseLayout = ()=>(
           <Route path="/index" component={Home}/>
           <Route path="/search" exact component={Search}/>
           <Route path="/search/detail" component={Detail}/>
-          <Route path="/logn" component={Login}/>
+          <Route path="/login" component={Login}/>
           <Redirect to="/index"/>
         </Switch>
       </div>

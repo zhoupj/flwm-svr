@@ -2,9 +2,9 @@
 import { message } from 'antd'
 import $ from 'jquery'
 
-const domain_name = '';
-const domain_front_name = '';
-//'http://127.0.0.1:8080'
+const domain_name = '';////'http://127.0.0.1:8080'
+const domain_front_name = '';//http://127.0.0.1:3002
+
 
 var Ajax = function (url, dat, suc_fun,js) {
 
@@ -48,7 +48,7 @@ var Ajax = function (url, dat, suc_fun,js) {
         message.error(result.code + ":" + result.msg);
         if(result.code==='2003'){
           //return (<Redirect to="/login" />);
-          window.location.href=domain_front_name+'/logn';
+          window.location.href=domain_front_name+'/login';
         }
 
       }
