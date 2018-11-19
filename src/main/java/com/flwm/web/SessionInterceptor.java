@@ -39,29 +39,29 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
 
-//        HttpSession session = request.getSession(false);
-//        if (session == null) {
-//            log.error("user not login for user:" + requestUrl);
-//            throw new FMException(ErrorCodeEnum.USER_NOT_LOGIN);
-//            // response.sendRedirect("/login2");
-//            // return false;
-//        }
-//
-//        UserDO user = (UserDO) session.getAttribute("user");
-//        if (user != null) {
-//            UserCache.setUser(user);
-//        } else {
-//            throw new FMException(ErrorCodeEnum.USER_NOT_LOGIN);
-//            //response.sendRedirect("/login2");
-//            // return false;
-//        }
-//
-//
-//        if (requestUrl.startsWith("/search") && user.getIsMember() == null && user.getIsMember() != 1) {
-//
-//            throw new FMException(ErrorCodeEnum.USER_ACCOUNT_NOT_MEMBER);
-//
-//        }
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            log.error("user not login for user:" + requestUrl);
+            throw new FMException(ErrorCodeEnum.USER_NOT_LOGIN);
+            // response.sendRedirect("/login2");
+            // return false;
+        }
+
+        UserDO user = (UserDO) session.getAttribute("user");
+        if (user != null) {
+            UserCache.setUser(user);
+        } else {
+            throw new FMException(ErrorCodeEnum.USER_NOT_LOGIN);
+            //response.sendRedirect("/login2");
+            // return false;
+        }
+
+
+        if (requestUrl.startsWith("/search") && user.getIsMember() == null && user.getIsMember() != 1) {
+
+            throw new FMException(ErrorCodeEnum.USER_ACCOUNT_NOT_MEMBER);
+
+        }
 
         return true;
     }
