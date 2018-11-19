@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Form, DatePicker, Button,Row, Col,Tooltip,Icon,InputNumber,Table,Popover } from 'antd';
+import { Form, DatePicker, Button,Row,Switch,Select, Col,Tooltip,Icon,InputNumber,Table,Popover } from 'antd';
 import './Search.css'
 import moment from 'moment';
 import Ajax from '../common/req'
 import Util from '../common/lib'
 
 const FormItem = Form.Item;
+const Option = Select.Option;
 
 
 const columns = [{
@@ -15,7 +16,7 @@ const columns = [{
   render: function (v, record) {
     if (record != null) {
       return (<Popover content={record.code} title="代码">
-        <a href={'/search/detail?code='+record.code+'&name='+record.name }> {v} </a>
+        <a target='_blank' href={'/search/detail?code='+record.code+'&name='+record.name }> {v} </a>
       </Popover>)
     }
   },
@@ -91,20 +92,22 @@ class SearchCom extends Component {
     data: [],
     param: {},
     pagination: {
-      pageSize: 10,
+      pageSize: 20,
       current: 1,
-      total: 0
+      total: 0,
+      onChange(page,pageSize) {
+
+      },
     },
     loading: false,
   };
 
 
   handleTableChange = (pagination, filters, sorter) => {
-    const pager = {...this.state.pagination};
-    pager.current = pagination.current;
-    this.setState({
-      pagination: pager,
-    });
+    //const pager = {...this.state.pagination};
+    //pager.current = pagination.current;
+    //console.log(pagination.current)
+    //this.setState({pagination});
     this.fetch({
       pageSize: pagination.pageSize,
       pageNo: pagination.current,
@@ -117,10 +120,12 @@ class SearchCom extends Component {
     //console.log('params:', JSON.stringify(params));
     this.setState({loading: true});
     const pagination = {...this.state.pagination};
+
     var that = this;
     Ajax('/search/list', JSON.stringify(params),
       function (result) {
         pagination.total = result.total;
+        pagination.current=params.pageNo;
         that.setState({
           data: result.data,
           pagination,
@@ -139,6 +144,8 @@ class SearchCom extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       values['tradeDate'] = values['tradeDate'].format('YYYY-MM-DD');
+      values['isMR'] = values['isMR']===true ?1:0;
+      values['gy'] = values['gy']===true ?1:0;
       const pager = {...this.state.pagination};
       pager.current = 1;
       this.setState({param: values, pagination: pager})
@@ -154,7 +161,20 @@ class SearchCom extends Component {
     this.props.form.resetFields();
   }
 
-
+//
+//<FormItem
+//{...formItemLayout}
+//label="RPS"
+//hasFeedback
+//>
+//{getFieldDecorator('rps', {initialValue:'RPS250'})(
+//  <Select >
+//    <Option value="RPS250">RPS250</Option>
+//    <Option value="RPS120">RPS120</Option>
+//    <Option value="RPS50">RPS50</Option>
+//  </Select>
+//)}
+//</FormItem>
   render() {
 
     const { getFieldDecorator } = this.props.form;
@@ -353,6 +373,26 @@ class SearchCom extends Component {
                     formatter={value => `${value}万`}
                     parser={value => value.replace('万', '')}
                   />
+                )}
+              </FormItem>
+            </Col>
+            <Col span={3}>
+              <FormItem
+                {...formItemLayout}
+                label="月线反转"
+              >
+                {getFieldDecorator('isMR', {})(
+                  <Switch checkedChildren="是" unCheckedChildren="无"/>
+                )}
+              </FormItem>
+            </Col>
+            <Col span={3}>
+              <FormItem
+                {...formItemLayout}
+                label="站上年线"
+              >
+                {getFieldDecorator('gy', {})(
+                  <Switch checkedChildren="是" unCheckedChildren="无"/>
                 )}
               </FormItem>
             </Col>

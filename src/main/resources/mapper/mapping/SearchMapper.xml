@@ -4,8 +4,8 @@
 
     <sql id="searchData">
     trade_date as tradeDate,fin_date as finDate, a.code, open, high, low, close, volume, turn, totals,
-    isHighOfYear, rps120, rps250, fluOf250d,  diffToHigh250,
-    peTTM,  hk_holding_amount as hkHoldingAmount,incOf2d,fund_holding as fundHolding,ssr_2 as ssr2
+    isHighOfYear, rps120, rps250, rps50,fluOf250d,  diffToHigh250,diffToHigh120
+    peTTM,  hk_holding_amount as hkHoldingAmount,incOf2d,fund_holding as fundHolding,ssr_2 as ssr2,is_m_r as isMR
   </sql>
 
     <sql id="kWhere">
@@ -61,8 +61,12 @@
             and diffToHigh250 &lt;= #{difftohigh250,jdbcType=DOUBLE}
         </if>
 
-        <if test="closeGreaterTo50!=null and closeGreaterTo50==1">
-            and close > ma50
+        <if test="difftohigh120 != null">
+            and diffToHigh120 &lt;= #{difftohigh120,jdbcType=DOUBLE}
+        </if>
+
+        <if test="gy!=null and gy==1">
+            and a.close > ma250
         </if>
 
         <if test="pettm != null">
@@ -89,6 +93,9 @@
 
         <if test="ssr2 != null">
             and ssr_2 &gt;= #{ssr2,jdbcType=DOUBLE}
+        </if>
+        <if test="isMR != null and isMR!=0">
+            and is_m_r =#{isMR}
         </if>
 
 

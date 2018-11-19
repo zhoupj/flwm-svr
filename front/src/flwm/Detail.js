@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Tabs } from 'antd';
+import { Tabs ,Input} from 'antd';
 import Base from './detail/base'
 import Tech from './detail/tech'
 import Util from '../common/lib'
@@ -7,6 +7,14 @@ import Org from './detail/org'
 import Shape from './detail/shape'
 
 const TabPane = Tabs.TabPane;
+//const Search = Input.Search;
+//
+//<div>
+//  <Search
+//    placeholder="input search text"
+//    onSearch={value => console.log(value)}
+//    style={{ width: 200 }}
+//  />
 class Detail extends Component {
 
   state = {
@@ -21,6 +29,7 @@ class Detail extends Component {
   render() {
     return (
       <div>
+
 
         <div>
           <Shape code={this.state.code} name={this.state.name}/>

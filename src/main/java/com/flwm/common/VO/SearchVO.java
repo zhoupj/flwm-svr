@@ -43,6 +43,7 @@ public class SearchVO {
     private Double hkHoldingAmount;
     private Double fundHolding;
     private Double ssr2;
+    private Double isMR;
 
 
     public SearchVO() {

@@ -230,13 +230,13 @@ class Shape extends Component {
       that.draw_k(res.data.reverse())
     })
   }
-
+  // <div><Tag color="red">上影线</Tag><Tag color="red">基金减仓</Tag></div>
   render() {
     return (
       <div>
 
         <div id="k" className="div-picture"></div>
-        <div><Tag color="red">上影线</Tag><Tag color="red">基金减仓</Tag></div>
+
       </div>
     );
   }

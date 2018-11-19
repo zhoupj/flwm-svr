@@ -42,6 +42,8 @@ public class SearchRequest extends PageRequest {
 
     //diff to high
     private Double difftohigh250;
+    //diff to half of high
+    private Double difftohigh120;
 
     //is high of year
     private Integer ishighofyear;
@@ -49,8 +51,10 @@ public class SearchRequest extends PageRequest {
     private Double pettm;
     //turn
     private Double turn;
-
-    private Integer closeGreaterTo50;
+    //站上年线
+    private Integer gy;
+    //月线反转
+    private Integer isMR;
     //funding
     private Double fundHolding;
     //ssr2
