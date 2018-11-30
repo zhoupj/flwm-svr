@@ -1,6 +1,6 @@
 package com.flwm.web;
 
-import com.flwm.common.domain.ErrorCodeEnum;
+import com.flwm.common.domain.FMErrorEnum;
 import com.flwm.common.domain.FMException;
 import com.flwm.common.domain.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,11 +30,11 @@ public class GlobalExceptionHandler {
         log.error("controller exp",e);
 
         if (e instanceof HttpRequestMethodNotSupportedException){
-            return Result.fail(ErrorCodeEnum.REQUEST_EXCEPTION);
+            return Result.fail(FMErrorEnum.REQUEST_EXCEPTION);
         }
 
         if (e instanceof MissingServletRequestParameterException){
-            return Result.fail(ErrorCodeEnum.PARAM_EXCEPTION);
+            return Result.fail(FMErrorEnum.PARAM_EXCEPTION);
         }
 
         if(e instanceof FMException){
@@ -44,6 +43,6 @@ public class GlobalExceptionHandler {
         }
 
 
-        return Result.fail(ErrorCodeEnum.SYS_EXCEPTION);
+        return Result.fail(FMErrorEnum.SYS_EXCEPTION);
     }
 }

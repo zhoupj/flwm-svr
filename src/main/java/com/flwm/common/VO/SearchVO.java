@@ -33,31 +33,34 @@ public class SearchVO {
     private Double totals;
     private Integer ishighofyear;
     private Double difftohigh250;
+    private Double difftohigh120;
     private Integer islowofyear;
    // private Double rps120;
     private Double rps250;
     private Double rps120;
+    private Double rps50;
     private Double fluof250d;
     private Double turn;
     private Double pettm;
     private Double hkHoldingAmount;
     private Double fundHolding;
     private Double ssr2;
-    private Double isMR;
+    private Integer isMR;
+    private Double ma250;
 
 
     public SearchVO() {
 
     }
 
-    public void fillBasicInfo(BasicDO basicDO){
-        if(basicDO!=null){
-            this.setTimetomarket(basicDO.getTimetomarket());
-            this.setIndustry(basicDO.getIndustry());
-            this.setName(basicDO.getName());
-        }
-
-    }
+//    public void fillBasicInfo(BasicDO basicDO){
+//        if(basicDO!=null){
+//            this.setTimetomarket(basicDO.getTimetomarket());
+//            this.setIndustry(basicDO.getIndustry());
+//            this.setName(basicDO.getName());
+//        }
+//
+//    }
 
     public static SearchVO convert(DayLineDO dayLineDO, FinanceDO financeDO, BasicDO basicDO) {
 

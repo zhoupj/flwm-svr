@@ -9,17 +9,19 @@ public class UserDO {
 
     private String name;
 
-    private String alias;
+    private String phone;
+
+    private String email;
+
+    private String pwd;
 
     private Integer isMember;
 
     private Date memberDeadline;
 
+    private Date firstLoginTime;
+
     private Date lastLoginTime;
-
-    private Integer loginDays;
-
-    private Date thisLoginTime;
 
     private String feature;
 
@@ -47,12 +49,28 @@ public class UserDO {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getAlias() {
-        return alias;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setAlias(String alias) {
-        this.alias = alias == null ? null : alias.trim();
+    public void setPhone(String phone) {
+        this.phone = phone == null ? null : phone.trim();
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
+    }
+
+    public String getPwd() {
+        return pwd;
+    }
+
+    public void setPwd(String pwd) {
+        this.pwd = pwd == null ? null : pwd.trim();
     }
 
     public Integer getIsMember() {
@@ -71,28 +89,20 @@ public class UserDO {
         this.memberDeadline = memberDeadline;
     }
 
+    public Date getFirstLoginTime() {
+        return firstLoginTime;
+    }
+
+    public void setFirstLoginTime(Date firstLoginTime) {
+        this.firstLoginTime = firstLoginTime;
+    }
+
     public Date getLastLoginTime() {
         return lastLoginTime;
     }
 
     public void setLastLoginTime(Date lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
-    }
-
-    public Integer getLoginDays() {
-        return loginDays;
-    }
-
-    public void setLoginDays(Integer loginDays) {
-        this.loginDays = loginDays;
-    }
-
-    public Date getThisLoginTime() {
-        return thisLoginTime;
-    }
-
-    public void setThisLoginTime(Date thisLoginTime) {
-        this.thisLoginTime = thisLoginTime;
     }
 
     public String getFeature() {

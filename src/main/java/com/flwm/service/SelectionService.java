@@ -1,7 +1,7 @@
 package com.flwm.service;
 
 import com.flwm.common.VO.SearchVO;
-import com.flwm.common.domain.ErrorCodeEnum;
+import com.flwm.common.domain.FMErrorEnum;
 import com.flwm.common.domain.FMException;
 import com.flwm.common.domain.SearchRequest;
 import com.flwm.common.domain.UserShareRequest;
@@ -25,7 +25,9 @@ public class SelectionService {
     @Autowired
     private SearchService searchService;
 
-
+    /**
+     *  根据用户和分组查询分组中的数据
+     */
     public List<SearchVO> queryByUserId(Integer userId,Integer group){
         List<UserShareDO> ssl= userShareDOMapper.selectByCond(new UserShareRequest(userId,null,group));
         if(ssl.size()==0){
@@ -44,6 +46,28 @@ public class SelectionService {
             return searchVOs;
         }
 
+    }
+
+
+    public void add(String code,Integer group,Integer userId){
+
+        List<UserShareDO> list = userShareDOMapper.selectByCond(new UserShareRequest(userId, code, group));
+        if(list.size()>0){
+            return;
+        }else{
+            UserShareDO userShareDO = new UserShareDO(userId, code, group);
+            userShareDOMapper.insert(userShareDO);
+        }
+    }
+
+    public void remove(String code,Integer group,Integer userId){
+
+        List<UserShareDO> list = userShareDOMapper.selectByCond(new UserShareRequest(userId, code, group));
+        if(list.size()==0){
+            return;
+        }else{
+            userShareDOMapper.deleteByPrimaryKey(list.get(0).getId());
+        }
     }
 
 
@@ -84,11 +108,11 @@ public class SelectionService {
 
         List<UserShareDO> list = userShareDOMapper.selectByCond(new UserShareRequest(userId, null, group));
         if (list.size() >= 100) {
-            throw new FMException(ErrorCodeEnum.SEL_ADD_TOOMANAY);
+            throw new FMException(FMErrorEnum.SEL_ADD_TOO_MANY);
         }
         Object[] arr = list.stream().filter(p -> p.getShareCode().equals(code)).toArray();
         if (arr != null && arr.length > 0) {
-            throw new FMException(ErrorCodeEnum.SEL_ADD_EXIST);
+            throw new FMException(FMErrorEnum.SEL_ADD_EXIST);
             //return false;
         }
         return true;

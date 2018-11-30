@@ -31,15 +31,17 @@ public class SearchServiceTest {
     public void searchTest() {
 
         SearchRequest request = new SearchRequest();
-        request.setTradeDate("2018-10-31");
+        request.setTradeDate("2018-11-29");
         //request.setRps250(87);
         request.setPageNo(0);
         request.setPageSize(50);
-       // request.setDifftohigh250(25.0);
+        request.setRps50(96.0);
+        // request.setDifftohigh250(25.0);
         //request.setFundHolding(1.0);
         //request.setCode("603787");
         List<SearchVO> vos = searchService.search(request);
         Assert.assertTrue(vos.size() > 0);
+        System.out.println("size:" + vos.size());
         System.out.println(JSON.toJSONString(vos));
 
 
@@ -79,16 +81,16 @@ public class SearchServiceTest {
     }
 
     @Test
-    public void techTest(){
-      List<TechVO>  lst = searchService.queryTechData("000860",60);
+    public void techTest() {
+        List<TechVO> lst = searchService.queryTechData("000860", 60);
         Assert.assertTrue(lst.size() == 60);
         System.out.println(JSON.toJSONString(lst));
 
     }
 
     @Test
-    public void testOrg(){
-      Map<String,Object> map= searchService.queryOrgTrend("000860",10,60);
+    public void testOrg() {
+        Map<String, Object> map = searchService.queryOrgTrend("000860", 10, 60);
         Assert.assertTrue(map.size() == 2);
         System.out.println(JSON.toJSONString(map));
 

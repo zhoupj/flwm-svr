@@ -29,7 +29,10 @@ public class ArticleController {
     @PostMapping("/detail")
     public ArticleDOWithBLOBs getDetail(@RequestParam(value = "id") Integer id) {
 
+
         return articleService.queryDetail(id);
+
+
 
     }
 

@@ -4,6 +4,7 @@ import com.flwm.dal.dao.UserDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+
 @Mapper
 @Repository
 public interface UserDOMapper {
@@ -15,11 +16,13 @@ public interface UserDOMapper {
 
     UserDO selectByPrimaryKey(Integer id);
 
-    UserDO selectByOpenId(String openId);
-
     int updateByPrimaryKeySelective(UserDO record);
 
     int updateByPrimaryKeyWithBLOBs(UserDO record);
 
     int updateByPrimaryKey(UserDO record);
+
+    UserDO selectByOpenId(String openId);
+
+    UserDO selectByPhone(String phone);
 }

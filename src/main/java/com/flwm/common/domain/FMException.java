@@ -8,9 +8,9 @@ import lombok.Data;
 @Data
 public class FMException extends RuntimeException {
 
-    private ErrorCodeEnum err;
+    private FMErrorEnum err;
 
-    public  FMException(ErrorCodeEnum err){
+    public  FMException(FMErrorEnum err){
         super();
         this.err=err;
 
@@ -18,7 +18,7 @@ public class FMException extends RuntimeException {
 
     public  FMException(String msg){
         super(msg);
-        this.err=ErrorCodeEnum.SYS_EXCEPTION;
+        this.err= FMErrorEnum.SYS_EXCEPTION;
 
     }
 }

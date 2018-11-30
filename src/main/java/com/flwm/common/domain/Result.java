@@ -18,8 +18,8 @@ public class Result {
         Result rst=new Result();
         rst.success=true;
         rst.data=data;
-        rst.code=ErrorCodeEnum.SUCCESS.getCode();
-        rst.msg=ErrorCodeEnum.SUCCESS.getMsg();
+        rst.code= FMErrorEnum.SUCCESS.getCode();
+        rst.msg= FMErrorEnum.SUCCESS.getMsg();
         return rst;
     }
 
@@ -29,7 +29,7 @@ public class Result {
         return rst;
     }
 
-    public static Result fail(ErrorCodeEnum err){
+    public static Result fail(FMErrorEnum err){
         Result rst=new Result();
         rst.success=false;
         rst.data=null;

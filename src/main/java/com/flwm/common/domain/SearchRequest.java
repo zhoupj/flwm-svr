@@ -25,9 +25,9 @@ public class SearchRequest extends PageRequest {
     private Double totals;
 
     //rps
-    private Integer rps250;
-    private Integer rps120;
-    private Integer rps50;
+    private Double rps250;
+    private Double rps120;
+    private Double rps50;
 
     //hk
     private Double hkHoldingAmount;
@@ -59,6 +59,9 @@ public class SearchRequest extends PageRequest {
     private Double fundHolding;
     //ssr2
     private Double ssr2;
+
+
+
 
     public String getFinDate(){
         return DateUtil.getReportDate(this.tradeDate);

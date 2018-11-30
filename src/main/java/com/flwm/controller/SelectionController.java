@@ -19,7 +19,7 @@ import java.util.List;
  * Created by zhoupj on 10/31/18.
  */
 @RestController
-@RequestMapping(value = "/sel" ,method = RequestMethod.POST)
+@RequestMapping(value = "/sel", method = RequestMethod.POST)
 public class SelectionController {
 
 
@@ -27,28 +27,43 @@ public class SelectionController {
     private SelectionService selectionService;
 
 
-    @PostMapping("/data")
-    public List<SearchVO> query(@RequestParam(value ="group") Integer group){
-        return selectionService.queryByUserId(UserCache.getUserId(),group);
+    @PostMapping("/query")
+    public List<SearchVO> query(@RequestParam(value = "group") Integer group) {
+        return selectionService.queryByUserId(UserCache.getUserId(), group);
+    }
+
+
+    @PostMapping("/add")
+    public boolean add(@RequestParam(value = "code") String code, @RequestParam(value = "group") Integer group) {
+
+        selectionService.add(code, group, UserCache.getUserId());
+        return true;
+    }
+
+    @PostMapping("/remove")
+    public boolean remove(@RequestParam(value = "code") String code, @RequestParam(value = "group") Integer group) {
+
+        selectionService.remove(code, group, UserCache.getUserId());
+        return true;
     }
 
 
     @PostMapping("/group")
-    public List<Integer> edit(@RequestParam(value ="code") String code) {
+    public List<Integer> edit(@RequestParam(value = "code") String code) {
 
-       return selectionService.queryGroupsByCode(UserCache.getUserId(),code);
+        return selectionService.queryGroupsByCode(UserCache.getUserId(), code);
 
     }
 
     @PostMapping("/edit")
-    public Boolean edit(@RequestParam(value ="code") String code,@RequestParam(value ="gs") String gs) {
+    public Boolean edit(@RequestParam(value = "code") String code, @RequestParam(value = "gs") String gs) {
 
-        List<Integer> groups=new ArrayList<>();
-        String[] arr=gs.split(",");
-        for(String s:arr){
+        List<Integer> groups = new ArrayList<>();
+        String[] arr = gs.split(",");
+        for (String s : arr) {
             groups.add(Integer.valueOf(s));
         }
-        selectionService.updateGroup(UserCache.getUserId(),code,groups);
+        selectionService.updateGroup(UserCache.getUserId(), code, groups);
 
         return true;
 

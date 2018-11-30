@@ -34,10 +34,17 @@ public class ParamUtil {
             return false;
     }
 
+
+
+
+
     public static void main(String [] args){
         System.out.println(ParamUtil.isPhone("123"));
         System.out.println(ParamUtil.isPhone("18457177669"));
         System.out.println(ParamUtil.isPhone("zhoupj"));
         System.out.println(ParamUtil.isEmail("zhoupj@154.com"));
     }
+
+
+
 }

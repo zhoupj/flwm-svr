@@ -15,7 +15,7 @@ public class PageRequest {
         if(pageNo<1){
             pageNo=1;
         }
-        if(pageSize<=0 || pageSize>200){
+        if(pageSize<=0){
             pageSize=20;
         }
         return (pageNo-1)*pageSize;

@@ -15,7 +15,7 @@ public class BeanUtil {
     public static<T> T convert(Object source, Class<T> targetClazz){
 
         Assert.notNull(source,"source can't be null");
-        Assert.notNull(targetClazz,"tagert class can't be null");
+        Assert.notNull(targetClazz,"target class can't be null");
 
         try{
             T t=targetClazz.newInstance();

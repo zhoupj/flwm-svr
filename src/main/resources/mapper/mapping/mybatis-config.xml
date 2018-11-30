@@ -15,5 +15,6 @@
         <mapper resource="mapper/mapping/UserDOMapper.xml"/>
         <mapper resource="mapper/mapping/UserShareDOMapper.xml"/>
         <mapper resource="mapper/mapping/SearchMapper.xml"/>
+        <mapper resource="mapper/mapping/TradeDOMapper.xml"/>
     </mappers>
 </configuration>

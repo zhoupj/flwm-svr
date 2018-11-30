@@ -53,6 +53,7 @@
     <result column="hk_holding_amount" jdbcType="DOUBLE" property="hkHoldingAmount" />
     <result column="hk_holding_ratio" jdbcType="DOUBLE" property="hkHoldingRatio" />
     <result column="incOf2d" jdbcType="DOUBLE" property="incof2d" />
+    <result column="is_m_r" jdbcType="INTEGER" property="isMR" />
   </resultMap>
   <sql id="Base_Column_List">
     id, trade_date, code, open, high, low, close, volume, turn, tradestatus, isST, totals, 
@@ -61,7 +62,7 @@
     diffToHigh120, diffToHigh80, sps120, sps250, sps80, ma5, ma10, ma20, ma50, ma120, 
     ma250, turn10ma, turn50ma, turnIncToYesterday, turnIncTo50Day, peTTM, curNumPeTTM1Y, 
     curNumPeTTM3Y, curNumPeTTM5Y, curNumPeTTMALL, hk_holding_amount, hk_holding_ratio, 
-    incOf2d
+    incOf2d,is_m_r
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -118,7 +119,7 @@
         and  diffToHigh250 &lt;= #{difftohigh250,jdbcType=DOUBLE}
       </if>
 
-      <if test="closeGreaterTo50!=null and closeGreaterTo50==1">
+      <if test="gy!=null and gy==1">
         and  close > ma50
       </if>
 

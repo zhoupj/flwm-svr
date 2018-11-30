@@ -5,19 +5,20 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="open_id" jdbcType="VARCHAR" property="openId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="alias" jdbcType="VARCHAR" property="alias" />
+    <result column="phone" jdbcType="CHAR" property="phone" />
+    <result column="email" jdbcType="CHAR" property="email" />
+    <result column="pwd" jdbcType="VARCHAR" property="pwd" />
     <result column="is_member" jdbcType="INTEGER" property="isMember" />
-    <result column="member_deadline" jdbcType="DATE" property="memberDeadline" />
+    <result column="member_deadline" jdbcType="TIMESTAMP" property="memberDeadline" />
+    <result column="first_login_time" jdbcType="TIMESTAMP" property="firstLoginTime" />
     <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
-    <result column="login_days" jdbcType="INTEGER" property="loginDays" />
-    <result column="this_login_time" jdbcType="TIMESTAMP" property="thisLoginTime" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.flwm.dal.dao.UserDO">
     <result column="feature" jdbcType="LONGVARCHAR" property="feature" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, open_id, name, alias, is_member, member_deadline, last_login_time, login_days, 
-    this_login_time
+    id, open_id, name, phone, email, pwd, is_member, member_deadline, first_login_time, 
+    last_login_time
   </sql>
   <sql id="Blob_Column_List">
     feature
@@ -31,7 +32,6 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
 
-
   <select id="selectByOpenId" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
     select
     <include refid="Base_Column_List" />
@@ -41,18 +41,26 @@
     where open_id = #{openId}
   </select>
 
+  <select id="selectByPhone" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from share_user
+    where open_id = #{openId}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from share_user
-    where id = #{id,jdbcType=INTEGER}
+    where phone = #{phone}
   </delete>
   <insert id="insert" parameterType="com.flwm.dal.dao.UserDO">
     insert into share_user (id, open_id, name, 
-      alias, is_member, member_deadline, 
-      last_login_time, login_days, this_login_time, 
+      phone, email, pwd, is_member, 
+      member_deadline, first_login_time, last_login_time, 
       feature)
     values (#{id,jdbcType=INTEGER}, #{openId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{alias,jdbcType=VARCHAR}, #{isMember,jdbcType=INTEGER}, #{memberDeadline,jdbcType=DATE}, 
-      #{lastLoginTime,jdbcType=TIMESTAMP}, #{loginDays,jdbcType=INTEGER}, #{thisLoginTime,jdbcType=TIMESTAMP}, 
+      #{phone,jdbcType=CHAR}, #{email,jdbcType=CHAR}, #{pwd,jdbcType=VARCHAR}, #{isMember,jdbcType=INTEGER}, 
+      #{memberDeadline,jdbcType=TIMESTAMP}, #{firstLoginTime,jdbcType=TIMESTAMP}, #{lastLoginTime,jdbcType=TIMESTAMP}, 
       #{feature,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.flwm.dal.dao.UserDO">
@@ -67,8 +75,14 @@
       <if test="name != null">
         name,
       </if>
-      <if test="alias != null">
-        alias,
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="pwd != null">
+        pwd,
       </if>
       <if test="isMember != null">
         is_member,
@@ -76,14 +90,11 @@
       <if test="memberDeadline != null">
         member_deadline,
       </if>
+      <if test="firstLoginTime != null">
+        first_login_time,
+      </if>
       <if test="lastLoginTime != null">
         last_login_time,
-      </if>
-      <if test="loginDays != null">
-        login_days,
-      </if>
-      <if test="thisLoginTime != null">
-        this_login_time,
       </if>
       <if test="feature != null">
         feature,
@@ -99,23 +110,26 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="alias != null">
-        #{alias,jdbcType=VARCHAR},
+      <if test="phone != null">
+        #{phone,jdbcType=CHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=CHAR},
+      </if>
+      <if test="pwd != null">
+        #{pwd,jdbcType=VARCHAR},
       </if>
       <if test="isMember != null">
         #{isMember,jdbcType=INTEGER},
       </if>
       <if test="memberDeadline != null">
-        #{memberDeadline,jdbcType=DATE},
+        #{memberDeadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="firstLoginTime != null">
+        #{firstLoginTime,jdbcType=TIMESTAMP},
       </if>
       <if test="lastLoginTime != null">
         #{lastLoginTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="loginDays != null">
-        #{loginDays,jdbcType=INTEGER},
-      </if>
-      <if test="thisLoginTime != null">
-        #{thisLoginTime,jdbcType=TIMESTAMP},
       </if>
       <if test="feature != null">
         #{feature,jdbcType=LONGVARCHAR},
@@ -131,23 +145,26 @@
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="alias != null">
-        alias = #{alias,jdbcType=VARCHAR},
+      <if test="phone != null">
+        phone = #{phone,jdbcType=CHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=CHAR},
+      </if>
+      <if test="pwd != null">
+        pwd = #{pwd,jdbcType=VARCHAR},
       </if>
       <if test="isMember != null">
         is_member = #{isMember,jdbcType=INTEGER},
       </if>
       <if test="memberDeadline != null">
-        member_deadline = #{memberDeadline,jdbcType=DATE},
+        member_deadline = #{memberDeadline,jdbcType=TIMESTAMP},
+      </if>
+      <if test="firstLoginTime != null">
+        first_login_time = #{firstLoginTime,jdbcType=TIMESTAMP},
       </if>
       <if test="lastLoginTime != null">
         last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="loginDays != null">
-        login_days = #{loginDays,jdbcType=INTEGER},
-      </if>
-      <if test="thisLoginTime != null">
-        this_login_time = #{thisLoginTime,jdbcType=TIMESTAMP},
       </if>
       <if test="feature != null">
         feature = #{feature,jdbcType=LONGVARCHAR},
@@ -159,12 +176,13 @@
     update share_user
     set open_id = #{openId,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
-      alias = #{alias,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=CHAR},
+      email = #{email,jdbcType=CHAR},
+      pwd = #{pwd,jdbcType=VARCHAR},
       is_member = #{isMember,jdbcType=INTEGER},
-      member_deadline = #{memberDeadline,jdbcType=DATE},
+      member_deadline = #{memberDeadline,jdbcType=TIMESTAMP},
+      first_login_time = #{firstLoginTime,jdbcType=TIMESTAMP},
       last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
-      login_days = #{loginDays,jdbcType=INTEGER},
-      this_login_time = #{thisLoginTime,jdbcType=TIMESTAMP},
       feature = #{feature,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -172,12 +190,14 @@
     update share_user
     set open_id = #{openId,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
-      alias = #{alias,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=CHAR},
+      email = #{email,jdbcType=CHAR},
+      pwd = #{pwd,jdbcType=VARCHAR},
       is_member = #{isMember,jdbcType=INTEGER},
-      member_deadline = #{memberDeadline,jdbcType=DATE},
-      last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
-      login_days = #{loginDays,jdbcType=INTEGER},
-      this_login_time = #{thisLoginTime,jdbcType=TIMESTAMP}
+      member_deadline = #{memberDeadline,jdbcType=TIMESTAMP},
+      first_login_time = #{firstLoginTime,jdbcType=TIMESTAMP},
+      last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
 </mapper>

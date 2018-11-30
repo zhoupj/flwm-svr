@@ -12,19 +12,21 @@ import java.util.Date;
 @Data
 public class UserVO {
 
-    private String openId;
-
     private String name;
+
+    private String phone;
+
+    private String email;
+
 
     private Integer isMember;
 
     private Date memberDeadline;
 
+    private Date firstLoginTime;
+
     private Date lastLoginTime;
 
-    private Integer loginDays;
-
-    private Date thisLoginTime;
 
 
     public static UserVO convert(UserDO userDO){
