@@ -72,7 +72,7 @@ public class SearchService {
     }
 
 
-    @Cacheable(value = CacheConfig.shareDate, key = "#req.tradeDate", unless = "#result==null || result.size()==0")
+    @Cacheable(value = CacheConfig.shareDate, key = "#dt", unless = "#result==null || result.size()==0")
     public List<SearchVO> searchByDate(String dt) {
 
         List<SearchVO> searchVOS = new ArrayList<>();
