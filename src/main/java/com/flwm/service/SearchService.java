@@ -3,6 +3,7 @@ package com.flwm.service;
 import com.flwm.common.VO.*;
 import com.flwm.common.cache.CacheConfig;
 import com.flwm.common.constant.IndexTypeConstant;
+import com.flwm.common.domain.FinRequest;
 import com.flwm.common.domain.SearchRequest;
 import com.flwm.dal.dao.BasicDO;
 import com.flwm.dal.dao.DayLineDO;
@@ -43,7 +44,7 @@ public class SearchService {
         // List<SearchVO> vos = searchMapper.selectByCond(request);
         // return mergeWithBasicInfo(vos);
 
-        List<SearchVO> searchVOS = searchByDate(request.getTradeDate());
+        List<SearchVO> searchVOS = searchByDate(request.getTradeDate(),request.getFinDate());
         searchVOS = filter(searchVOS, request);
 
         int offset = request.getOffset();
@@ -64,7 +65,7 @@ public class SearchService {
     public Long searchCount(SearchRequest request) {
         // return searchMapper.selectCountByCond(request);
 
-        List<SearchVO> searchVOS = searchByDate(request.getTradeDate());
+        List<SearchVO> searchVOS = searchByDate(request.getTradeDate(), request.getFinDate());
 
         searchVOS = filter(searchVOS, request);
 
@@ -73,7 +74,7 @@ public class SearchService {
 
 
     @Cacheable(value = CacheConfig.shareDate, key = "#dt", unless = "#result==null || result.size()==0")
-    public List<SearchVO> searchByDate(String dt) {
+    public List<SearchVO> searchByDate(String dt, String finDate) {
 
         List<SearchVO> searchVOS = new ArrayList<>();
         SearchRequest dayLineSearch = new SearchRequest();
@@ -82,16 +83,32 @@ public class SearchService {
         dayLineSearch.setPageSize(Integer.MAX_VALUE);
         List<DayLineDO> dayLineDOS = dayLineDOMapper.selectByCond(dayLineSearch);
 
+        Map<String, FinanceDO> fsMap = getFinanceMap(finDate);
+
         for (DayLineDO d : dayLineDOS) {
 
-            List<FinanceDO> fs = financeDOMapper.selectByCode(d.getCode(), 1, SEASON);
+            FinanceDO fs = fsMap.get(d.getCode());
+            //financeDOMapper.selectByCode(d.getCode(), 1, SEASON);
             BasicDO basic = basicDOMapper.selectByCode(d.getCode());
-            searchVOS.add(SearchVO.convert(d, fs.size() == 0 ? null : fs.get(0), basic));
+            searchVOS.add(SearchVO.convert(d, fs, basic));
 
         }
         return searchVOS;
     }
 
+
+    private Map<String, FinanceDO> getFinanceMap(String finDate) {
+        Map<String, FinanceDO> map = new HashMap<>();
+        FinRequest finRequest = new FinRequest();
+        finRequest.setFinDate(finDate);
+        finRequest.setFinType(SEASON);
+        List<FinanceDO> fs = financeDOMapper.selectByCond(finRequest);
+        for (FinanceDO f : fs) {
+            map.put(f.getCode(), f);
+        }
+        return map;
+
+    }
 
     private List<SearchVO> filter(List<SearchVO> searchVOS, SearchRequest request) {
 
@@ -107,7 +124,7 @@ public class SearchService {
                 .filter(p -> compareGreaterEqual(request.getRps50(), p.getRps50()))
                 .filter(p -> compareGreaterEqual(request.getSsr2(), p.getSsr2()))
                 .filter(p -> compareLessEqual(request.getTurn(), p.getTurn()))
-                .filter(p -> request.getGy() == null ||  p.getMa250()!=null && p.getClose() >= p.getMa250())
+                .filter(p -> request.getGy() == null || p.getMa250() != null && p.getClose() >= p.getMa250())
                 .sorted(Comparator.comparing(SearchVO::getCode)).collect(Collectors.toList());
     }
 
