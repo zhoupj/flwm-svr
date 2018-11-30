@@ -47,7 +47,7 @@
     ,
     <include refid="Blob_Column_List" />
     from share_user
-    where open_id = #{openId}
+    where phone = #{phone}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from share_user

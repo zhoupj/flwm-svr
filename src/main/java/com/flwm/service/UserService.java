@@ -37,17 +37,21 @@ public class UserService {
 
     public UserDO getUser(String openId) {
         UserDO userDO = userDOMapper.selectByOpenId(openId);
-        checkMemeber(userDO);
+        if(userDO!=null){
+            checkMemeber(userDO);
+        }
         return userDO;
     }
 
     public UserDO getUserByPhone(String phone) {
         UserDO userDO = userDOMapper.selectByPhone(phone);
-        checkMemeber(userDO);
+        if(userDO!=null){
+            checkMemeber(userDO);
+        }
         return userDO;
     }
 
-    private void checkMemeber(UserDO userDO) {
+    public void checkMemeber(UserDO userDO) {
         if (userDO.getIsMember() == 1 && userDO.getMemberDeadline() != null) {
             if (userDO.getMemberDeadline().compareTo(new Date()) < 0) {
                 userDO.setIsMember(0);
@@ -59,7 +63,7 @@ public class UserService {
     }
 
 
-    @Cacheable(value = CacheConfig.userCache, key = "#id",unless="#result==null")
+    @Cacheable(value = CacheConfig.userCache, key = "#id", unless = "#result==null")
     public UserDO getUser(Integer id) {
         return userDOMapper.selectByPrimaryKey(id);
     }
@@ -67,12 +71,15 @@ public class UserService {
 
     public void insertUser(String openId, String nickName) {
 
+        /**
+         * 上一次登录 需要在session
+         * 推出
+         * //TODO
+         */
+
         UserDO userDO = new UserDO();
         userDO.setOpenId(openId);
         userDO.setName(nickName);
-        /**
-         * 第一次登录时间,含义变一下
-         */
         userDO.setFirstLoginTime(new Date());
         userDO.setIsMember(0);
         userDO.setLastLoginTime(userDO.getFirstLoginTime());
@@ -85,7 +92,7 @@ public class UserService {
     }
 
     @Transactional
-    @CacheEvict(value =CacheConfig.userCache, key = "#userId")
+    @CacheEvict(value = CacheConfig.userCache, key = "#userId")
     public void buyMember(Integer userId, Integer actId) {
 
         UserDO userDO = getUser(userId);
