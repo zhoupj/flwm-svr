@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Mapper
@@ -26,4 +27,6 @@ public interface DayLineDOMapper {
     int updateByPrimaryKeySelective(DayLineDO record);
 
     int updateByPrimaryKey(DayLineDO record);
+
+    Date selectNewestDate();
 }

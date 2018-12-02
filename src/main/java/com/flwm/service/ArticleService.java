@@ -30,7 +30,6 @@ public class ArticleService {
     }
 
 
-    @CachePut()
     public ArticleDOWithBLOBs queryDetail(int id) {
         ArticleDOWithBLOBs article = articleDOMapper.selectByPrimaryKey(id);
         if (article != null) {

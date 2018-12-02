@@ -72,6 +72,12 @@ public class SearchRequest extends PageRequest {
 
     }
 
+    public SearchRequest(String code){
+
+        this.code=code;
+
+    }
+
     public SearchRequest(String code,boolean lastest){
 
         this.code=code;

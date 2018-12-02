@@ -5,6 +5,7 @@ import com.flwm.common.cache.CacheConfig;
 import com.flwm.common.constant.IndexTypeConstant;
 import com.flwm.common.domain.FinRequest;
 import com.flwm.common.domain.SearchRequest;
+import com.flwm.common.util.DateUtil;
 import com.flwm.dal.dao.BasicDO;
 import com.flwm.dal.dao.DayLineDO;
 import com.flwm.dal.dao.FinanceDO;
@@ -31,50 +32,37 @@ public class SearchService {
 
     @Autowired
     private BasicDOMapper basicDOMapper;
-    //    @Autowired
-//    private SearchMapper searchMapper;
+    @Autowired
+    private SearchMapper searchMapper;
     @Autowired
     private DayLineDOMapper dayLineDOMapper;
     @Autowired
     private FinanceDOMapper financeDOMapper;
 
 
-    public List<SearchVO> search(SearchRequest request) {
+    public List<SearchVO> searchOld(SearchRequest request) {
 
-        // List<SearchVO> vos = searchMapper.selectByCond(request);
-        // return mergeWithBasicInfo(vos);
-
-        List<SearchVO> searchVOS = searchByDate(request.getTradeDate(),request.getFinDate());
-        searchVOS = filter(searchVOS, request);
-
-        int offset = request.getOffset();
-
-        if (offset >= searchVOS.size()) {
-            return new ArrayList<>();
-        }
-
-        if (offset + request.getPageSize() >= searchVOS.size()) {
-            return searchVOS.subList(offset, searchVOS.size());
-        } else {
-            return searchVOS.subList(offset, offset + request.getPageSize());
-        }
+        List<SearchVO> vos = searchMapper.selectByCond(request);
+        return mergeWithBasicInfo(vos);
 
 
     }
 
-    public Long searchCount(SearchRequest request) {
-        // return searchMapper.selectCountByCond(request);
+    private List<SearchVO> mergeWithBasicInfo(List<SearchVO> vos) {
 
-        List<SearchVO> searchVOS = searchByDate(request.getTradeDate(), request.getFinDate());
-
-        searchVOS = filter(searchVOS, request);
-
-        return (long) searchVOS.size();
+        for (SearchVO v : vos) {
+            BasicDO basic = basicDOMapper.selectByCode(v.getCode());
+            v.fillBasicInfo(basic);
+        }
+        return vos;
     }
 
 
-    @Cacheable(value = CacheConfig.shareDate, key = "#dt", unless = "#result==null || result.size()==0")
-    public List<SearchVO> searchByDate(String dt, String finDate) {
+    @Cacheable(value = CacheConfig.shareDate, key = "#dt", unless = "#result==null || #result.size()==0")
+    public List<SearchVO> searchByDate(String dt) {
+
+
+        System.out.println("***************************");
 
         List<SearchVO> searchVOS = new ArrayList<>();
         SearchRequest dayLineSearch = new SearchRequest();
@@ -83,7 +71,11 @@ public class SearchService {
         dayLineSearch.setPageSize(Integer.MAX_VALUE);
         List<DayLineDO> dayLineDOS = dayLineDOMapper.selectByCond(dayLineSearch);
 
-        Map<String, FinanceDO> fsMap = getFinanceMap(finDate);
+        if (dayLineDOS.size() == 0) {
+            return searchVOS;
+        }
+
+        Map<String, FinanceDO> fsMap = getFinanceMap(DateUtil.getReportDate(dt));
 
         for (DayLineDO d : dayLineDOS) {
 
@@ -93,6 +85,7 @@ public class SearchService {
             searchVOS.add(SearchVO.convert(d, fs, basic));
 
         }
+
         return searchVOS;
     }
 
@@ -102,6 +95,8 @@ public class SearchService {
         FinRequest finRequest = new FinRequest();
         finRequest.setFinDate(finDate);
         finRequest.setFinType(SEASON);
+        finRequest.setPageNo(1);
+        finRequest.setPageSize(Integer.MAX_VALUE);
         List<FinanceDO> fs = financeDOMapper.selectByCond(finRequest);
         for (FinanceDO f : fs) {
             map.put(f.getCode(), f);
@@ -110,48 +105,6 @@ public class SearchService {
 
     }
 
-    private List<SearchVO> filter(List<SearchVO> searchVOS, SearchRequest request) {
-
-        return searchVOS.parallelStream()
-                .filter(p -> compareLessEqual(request.getDifftohigh250(), p.getDifftohigh250()))
-                .filter(p -> compareLessEqual(request.getDifftohigh120(), p.getDifftohigh120()))
-                .filter(p -> compareLessEqual(request.getFluof250d(), p.getFluof250d()))
-                .filter(p -> compareGreaterEqual(request.getFundHolding(), p.getFundHolding()))
-                .filter(p -> compareGreaterEqual(request.getHkHoldingAmount(), p.getHkHoldingAmount()))
-                .filter(p -> request.getIsMR() == null || p.getIsMR() != null && p.getIsMR() == request.getIsMR())
-                .filter(p -> compareGreaterEqual(request.getRps250(), p.getRps250()))
-                .filter(p -> compareGreaterEqual(request.getRps120(), p.getRps120()))
-                .filter(p -> compareGreaterEqual(request.getRps50(), p.getRps50()))
-                .filter(p -> compareGreaterEqual(request.getSsr2(), p.getSsr2()))
-                .filter(p -> compareLessEqual(request.getTurn(), p.getTurn()))
-                .filter(p -> request.getGy() == null || p.getMa250() != null && p.getClose() >= p.getMa250())
-                .sorted(Comparator.comparing(SearchVO::getCode)).collect(Collectors.toList());
-    }
-
-
-    private boolean compareGreaterEqual(Double request, Double actual) {
-
-        return request == null || (actual != null && actual.doubleValue() >= request);
-
-    }
-
-    private boolean compareLessEqual(Double request, Double actual) {
-
-        return request == null || (actual != null && actual.doubleValue() <= request);
-    }
-
-
-
-
-    /*private List<SearchVO> mergeWithBasicInfo(List<SearchVO> vos) {
-
-        for (SearchVO v : vos) {
-            BasicDO basic = basicDOMapper.selectByCode(v.getCode());
-            v.fillBasicInfo(basic);
-        }
-        return vos;
-    }
-*/
 
     public List<ShapeVO> queryShape(String code, int days) {
 

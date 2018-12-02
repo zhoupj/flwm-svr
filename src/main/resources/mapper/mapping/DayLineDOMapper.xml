@@ -146,6 +146,14 @@
     limit #{days}
   </select>
 
+
+  <select id="selectNewestDate"  resultType="java.util.Date">
+    select trade_date
+    from share_data_day
+    order by trade_date desc
+    limit 1
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from share_data_day
     where id = #{id,jdbcType=INTEGER}

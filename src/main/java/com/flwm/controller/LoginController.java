@@ -47,6 +47,8 @@ public class LoginController {
         if (user == null) {
             userService.insertUser(openId, name);
             user = userService.getUser(openId);
+        }else{
+            userService.updateLastLoginTime(user);
         }
 
         createSession(request, user);
@@ -82,7 +84,7 @@ public class LoginController {
 
     private void createSession(HttpServletRequest request, UserDO user) {
         HttpSession session = request.getSession(true);
-        log.info("session id:" + session.getId() + "," + user.getOpenId());
+
         session.setAttribute("user", user);
     }
 

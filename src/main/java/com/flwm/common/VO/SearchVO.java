@@ -53,14 +53,14 @@ public class SearchVO {
 
     }
 
-//    public void fillBasicInfo(BasicDO basicDO){
-//        if(basicDO!=null){
-//            this.setTimetomarket(basicDO.getTimetomarket());
-//            this.setIndustry(basicDO.getIndustry());
-//            this.setName(basicDO.getName());
-//        }
-//
-//    }
+    public void fillBasicInfo(BasicDO basicDO){
+        if(basicDO!=null){
+            this.setTimetomarket(basicDO.getTimetomarket());
+            this.setIndustry(basicDO.getIndustry());
+            this.setName(basicDO.getName());
+        }
+
+    }
 
     public static SearchVO convert(DayLineDO dayLineDO, FinanceDO financeDO, BasicDO basicDO) {
 

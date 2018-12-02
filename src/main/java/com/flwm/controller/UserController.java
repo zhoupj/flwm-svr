@@ -50,21 +50,10 @@ public class UserController {
         return true;
     }
 
-    @PostMapping("/ds")
-    public List<String> getUseDateList() {
 
-        UserDO user = UserCache.getUser();
-        if (user.getIsMember() == 1) {
-            return DateUtil.getDateList(0, 30);
-        } else {
-            return DateUtil.getDateList(-1, 3);
-        }
-
-    }
 
     @PostMapping("/ph")
     public boolean bindPhone(@RequestParam(value = "phone") String phone) {
-        UserDO user = UserCache.getUser();
         userService.updateUserPhone(UserCache.getUserId(), phone);
         return true;
 

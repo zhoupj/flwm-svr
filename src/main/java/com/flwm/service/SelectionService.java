@@ -5,12 +5,17 @@ import com.flwm.common.domain.FMErrorEnum;
 import com.flwm.common.domain.FMException;
 import com.flwm.common.domain.SearchRequest;
 import com.flwm.common.domain.UserShareRequest;
+import com.flwm.common.util.DateUtil;
+import com.flwm.common.util.FilterUtil;
 import com.flwm.dal.dao.UserShareDO;
+import com.flwm.dal.mapper.DayLineDOMapper;
 import com.flwm.dal.mapper.UserShareDOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.unit.DataUnit;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +29,8 @@ public class SelectionService {
     private UserShareDOMapper userShareDOMapper;
     @Autowired
     private SearchService searchService;
+    @Autowired
+    private DayLineDOMapper dayLineDOMapper;
 
     /**
      *  根据用户和分组查询分组中的数据
@@ -35,9 +42,11 @@ public class SelectionService {
         }else{
             List<String> codes=ssl.stream().map(p->p.getShareCode()).collect(Collectors.toList());
 
+            Date newsDate=dayLineDOMapper.selectNewestDate();
             List<SearchVO> searchVOs=new ArrayList<>();
             codes.forEach(p->{
-                List<SearchVO> vos=searchService.search(new SearchRequest(p,true));
+                List<SearchVO> vos=searchService.searchByDate(DateUtil.getShortFormat(newsDate));
+                vos= FilterUtil.filterData(vos,new SearchRequest(p));
                 if(vos.size()>0){
                     searchVOs.add(vos.get(0));
                 }

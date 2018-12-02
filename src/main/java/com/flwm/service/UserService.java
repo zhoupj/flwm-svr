@@ -1,5 +1,6 @@
 package com.flwm.service;
 
+import com.flwm.common.auth.MemberLevelEnum;
 import com.flwm.common.cache.CacheConfig;
 import com.flwm.common.domain.FMErrorEnum;
 import com.flwm.common.domain.FMException;
@@ -12,6 +13,7 @@ import com.flwm.dal.mapper.ActivityDOMapper;
 import com.flwm.dal.mapper.BuyRecordDOMapper;
 import com.flwm.dal.mapper.UserDOMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -37,7 +39,7 @@ public class UserService {
 
     public UserDO getUser(String openId) {
         UserDO userDO = userDOMapper.selectByOpenId(openId);
-        if(userDO!=null){
+        if (userDO != null) {
             checkMemeber(userDO);
         }
         return userDO;
@@ -45,14 +47,14 @@ public class UserService {
 
     public UserDO getUserByPhone(String phone) {
         UserDO userDO = userDOMapper.selectByPhone(phone);
-        if(userDO!=null){
+        if (userDO != null) {
             checkMemeber(userDO);
         }
         return userDO;
     }
 
     public void checkMemeber(UserDO userDO) {
-        if (userDO.getIsMember() == 1 && userDO.getMemberDeadline() != null) {
+        if (userDO.getIsMember() >=MemberLevelEnum.ONE_LEVEL.getLevel() && userDO.getMemberDeadline() != null) {
             if (userDO.getMemberDeadline().compareTo(new Date()) < 0) {
                 userDO.setIsMember(0);
                 userDO.setMemberDeadline(null);
@@ -81,9 +83,21 @@ public class UserService {
         userDO.setOpenId(openId);
         userDO.setName(nickName);
         userDO.setFirstLoginTime(new Date());
-        userDO.setIsMember(0);
+        /**
+         * 首次赠送7天会员
+         */
+        userDO.setIsMember(1);
+        userDO.setMemberDeadline(DateUtil.getDayByCode("week_v"));
         userDO.setLastLoginTime(userDO.getFirstLoginTime());
         userDOMapper.insertSelective(userDO);
+    }
+
+    public void updateLastLoginTime(UserDO userDO) {
+
+        if (userDO != null) {
+            userDO.setLastLoginTime(new Date());
+            userDOMapper.updateByPrimaryKey(userDO);
+        }
     }
 
 
@@ -96,7 +110,7 @@ public class UserService {
     public void buyMember(Integer userId, Integer actId) {
 
         UserDO userDO = getUser(userId);
-        if (userDO.getIsMember() == 1) {
+        if (userDO.getIsMember()== MemberLevelEnum.SUPER.getLevel()) {
             throw new FMException(FMErrorEnum.MEMBER_BUY_FORBIDDEN);
         } else {
             ActivityDO act = activityDOMapper.selectByPrimaryKey(actId);
@@ -110,7 +124,7 @@ public class UserService {
 
 
     private void updateMember(UserDO userDO, ActivityDO act) {
-        userDO.setIsMember(1);
+        userDO.setIsMember(MemberLevelEnum.SUPER.getLevel());
         userDO.setMemberDeadline(DateUtil.getDayByCode(act.getActCode()));
         userDOMapper.updateByPrimaryKey(userDO);
     }

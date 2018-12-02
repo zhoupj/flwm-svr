@@ -6,6 +6,7 @@ import com.flwm.common.VO.SearchVO;
 import com.flwm.common.VO.ShapeVO;
 import com.flwm.common.VO.TechVO;
 import com.flwm.common.domain.SearchRequest;
+import com.flwm.common.util.FilterUtil;
 import com.flwm.service.SearchService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,22 +29,44 @@ public class SearchServiceTest {
     @Autowired
     private SearchService searchService;
 
-    @Test
-    public void searchTest() {
 
+    public List<SearchVO> getResult(SearchRequest request) {
+
+        List<SearchVO> searchVOS = searchService.searchByDate(request.getTradeDate());
+        searchVOS = FilterUtil.filterData(searchVOS, request);
+        return FilterUtil.filterPage(searchVOS, request);
+
+    }
+
+    @Test
+    public void searchTestByPublicMethod() throws Exception {
         SearchRequest request = new SearchRequest();
-        request.setTradeDate("2018-11-29");
+        request.setTradeDate("2018-11-30");
         //request.setRps250(87);
         request.setPageNo(0);
-        request.setPageSize(50);
+        request.setPageSize(20);
         request.setRps50(96.0);
-        // request.setDifftohigh250(25.0);
-        //request.setFundHolding(1.0);
-        //request.setCode("603787");
-        List<SearchVO> vos = searchService.search(request);
-        Assert.assertTrue(vos.size() > 0);
-        System.out.println("size:" + vos.size());
-        System.out.println(JSON.toJSONString(vos));
+        request.setSsr2(60.0);
+
+        for (int i = 0; i < 5; i++) {
+            long start = System.currentTimeMillis();
+            List<SearchVO> vos = getResult(request);
+            long end = System.currentTimeMillis();
+            Thread.sleep(2000);
+            Assert.assertTrue(vos.size() > 0);
+            System.out.println("size:" + vos.size() + ",cose:" + (end - start));
+        }
+
+
+        for (int i = 0; i < 5; i++) {
+            long start = System.currentTimeMillis();
+            List<SearchVO> vos = searchService.searchOld(request);
+            long end = System.currentTimeMillis();
+            Thread.sleep(2000);
+            Assert.assertTrue(vos.size() > 0);
+
+            System.out.println("size:" + vos.size() + ",cose:" + (end - start));
+        }
 
 
     }
@@ -51,14 +75,14 @@ public class SearchServiceTest {
     public void searchTest2() {
 
         SearchRequest request = new SearchRequest();
-        request.setTradeDate("2018-10-31");
+        request.setTradeDate("2018-11-27");
         //request.setRps250(87);
         request.setPageNo(0);
         request.setPageSize(50);
         // request.setDifftohigh250(25.0);
         //request.setFundHolding(1.0);
         request.setCode("603787");
-        List<SearchVO> vos = searchService.search(request);
+        List<SearchVO> vos = searchService.searchOld(request);
         Assert.assertTrue(vos.size() > 0);
         System.out.println(JSON.toJSONString(vos));
 
