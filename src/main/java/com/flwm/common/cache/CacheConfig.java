@@ -2,7 +2,9 @@ package com.flwm.common.cache;
 
 
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.stats.CacheStats;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -17,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 @Configurable
 @EnableCaching
+@Slf4j(topic = "digest")
 public class CacheConfig {
 
 
@@ -28,9 +31,9 @@ public class CacheConfig {
     public enum CacheEnum {
 
 
-        USER_CACHE(userCache, 500, 7200), //有效期5秒
-        SHARE_CODE(shareCode, 6000, 36000), //缺省10秒
-        SHARE_DATE(shareDate, 30, 7200),
+        USER_CACHE(userCache, 500, 36000), //有效期5秒
+        SHARE_CODE(shareCode, 1, 3600), //缺省10秒
+        SHARE_DATE(shareDate, 30, 36000),
 
         ;
 
@@ -58,21 +61,36 @@ public class CacheConfig {
 
         /**
          *   https://blog.csdn.net/qq_38398479/article/details/70578876
+         *   https://www.jianshu.com/p/15d0a9ce37dd
          */
 
 
         SimpleCacheManager cacheManager = new SimpleCacheManager();
 
-        List<CaffeineCache> caches = new ArrayList<CaffeineCache>();
+        List<CaffeineCache> caches = new ArrayList<>();
         for (CacheEnum c : CacheEnum.values()) {
             caches.add(new CaffeineCache(c.name(),
                     Caffeine.newBuilder().recordStats()
-                            .expireAfterWrite(c.getTtl(), TimeUnit.SECONDS)
+                            .expireAfterAccess(c.getTtl(), TimeUnit.SECONDS)
                             .maximumSize(c.getMaxSize())
                             .build())
             );
         }
         cacheManager.setCaches(caches);
+
+
+        new Thread(() -> {
+            for (CaffeineCache caff : caches) {
+                CacheStats cs = caff.getNativeCache().stats();
+                log.info("caffeineCache|" + cs.hitCount() + "|" + cs.missCount() + "|" + cs.hitRate() + "%|" + cs.loadFailureRate() + "%");
+                try {
+                    Thread.sleep(300000);
+                } catch (Throwable e) {
+
+                }
+            }
+
+        }).start();
 
         return cacheManager;
     }

@@ -1,6 +1,7 @@
 package com.flwm.common.aop;
 
 import com.flwm.common.annotation.AuthMember;
+import com.flwm.common.auth.MemberLevelEnum;
 import com.flwm.common.cache.UserCache;
 import com.flwm.common.domain.FMErrorEnum;
 import com.flwm.common.domain.FMException;
@@ -29,6 +30,7 @@ public class MemberAop {
 
     /**
      * around:ProceedingJoinPoint
+     *
      * @param pjp
      */
     @Before("controller()")
@@ -43,7 +45,7 @@ public class MemberAop {
 
             UserDO userDO = UserCache.getUser();
 
-            if (userDO == null || userDO.getIsMember() != 1) {
+            if (userDO == null || userDO.getIsMember() == MemberLevelEnum.USER.getLevel()) {
                 throw new FMException(FMErrorEnum.USER_ACCOUNT_NOT_MEMBER);
             }
 

@@ -27,18 +27,24 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public Result jsonErrorHandler(HttpServletRequest req, Throwable e) throws Exception {
 
-        log.error("controller exp",e);
 
-        if (e instanceof HttpRequestMethodNotSupportedException){
+        if (e instanceof FMException) {
+            log.error("controller exp for " + req.getRequestURI() + " because of " + ((FMException) e).getErr().name());
+        } else {
+            log.error("controller exp for " + req.getRequestURI(), e);
+        }
+
+
+        if (e instanceof HttpRequestMethodNotSupportedException) {
             return Result.fail(FMErrorEnum.REQUEST_EXCEPTION);
         }
 
-        if (e instanceof MissingServletRequestParameterException){
+        if (e instanceof MissingServletRequestParameterException) {
             return Result.fail(FMErrorEnum.PARAM_EXCEPTION);
         }
 
-        if(e instanceof FMException){
-            FMException fm=(FMException) e;
+        if (e instanceof FMException) {
+            FMException fm = (FMException) e;
             return Result.fail(fm.getErr());
         }
 

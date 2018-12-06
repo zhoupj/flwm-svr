@@ -41,6 +41,11 @@ public class FinRequest extends PageRequest {
 
     }
 
+    public FinRequest(String  code,String finDate) {
+        this.code=code;
+        this.finDate=finDate;
+    }
+
     public FinRequest(SearchRequest request) {
 
         this.finDate = DateUtil.getReportDate(request.getTradeDate());

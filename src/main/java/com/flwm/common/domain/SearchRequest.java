@@ -78,6 +78,13 @@ public class SearchRequest extends PageRequest {
 
     }
 
+    public SearchRequest(String code,String dt){
+
+        this.code=code;
+        this.tradeDate=dt;
+
+    }
+
     public SearchRequest(String code,boolean lastest){
 
         this.code=code;

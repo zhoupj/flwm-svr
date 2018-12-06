@@ -29,28 +29,32 @@ public class SelectionService {
     private UserShareDOMapper userShareDOMapper;
     @Autowired
     private SearchService searchService;
-    @Autowired
-    private DayLineDOMapper dayLineDOMapper;
+
 
     /**
-     *  根据用户和分组查询分组中的数据
+     * 根据用户和分组查询分组中的数据
      */
-    public List<SearchVO> queryByUserId(Integer userId,Integer group){
-        List<UserShareDO> ssl= userShareDOMapper.selectByCond(new UserShareRequest(userId,null,group));
-        if(ssl.size()==0){
+    public List<SearchVO> queryByUserId(Integer userId, Integer group) {
+        List<UserShareDO> ssl = userShareDOMapper.selectByCond(new UserShareRequest(userId, null, group));
+        if (ssl.size() == 0) {
             return new ArrayList<>();
-        }else{
-            List<String> codes=ssl.stream().map(p->p.getShareCode()).collect(Collectors.toList());
+        } else {
+            List<String> codes = ssl.stream().map(p -> p.getShareCode()).collect(Collectors.toList());
 
-            Date newsDate=dayLineDOMapper.selectNewestDate();
-            List<SearchVO> searchVOs=new ArrayList<>();
-            codes.forEach(p->{
-                List<SearchVO> vos=searchService.searchByDate(DateUtil.getShortFormat(newsDate));
-                vos= FilterUtil.filterData(vos,new SearchRequest(p));
-                if(vos.size()>0){
-                    searchVOs.add(vos.get(0));
+            List<SearchVO> searchVOs = new ArrayList<>();
+            codes.forEach(p -> {
+                /**
+                 * 此处用缓存，可能存在问题
+                 */
+                SearchVO vo = searchService.getFromCacheNewsVO(p);
+                if (vo == null) {
+                    /**
+                     * 降级策略，不够优雅，只能显示code
+                     */
+                    vo = new SearchVO();
+                    vo.setCode(p);
                 }
-
+                searchVOs.add(vo);
             });
             return searchVOs;
         }
@@ -58,53 +62,54 @@ public class SelectionService {
     }
 
 
-    public void add(String code,Integer group,Integer userId){
+    public void add(String code, Integer group, Integer userId) {
 
-        List<UserShareDO> list = userShareDOMapper.selectByCond(new UserShareRequest(userId, code, group));
-        if(list.size()>0){
+
+        if (!canAdd(userId, group, code)) {
             return;
-        }else{
-            UserShareDO userShareDO = new UserShareDO(userId, code, group);
-            userShareDOMapper.insert(userShareDO);
         }
+
+        UserShareDO userShareDO = new UserShareDO(userId, code, group);
+        userShareDOMapper.insert(userShareDO);
+
     }
 
-    public void remove(String code,Integer group,Integer userId){
+    public void remove(String code, Integer group, Integer userId) {
 
         List<UserShareDO> list = userShareDOMapper.selectByCond(new UserShareRequest(userId, code, group));
-        if(list.size()==0){
+        if (list.size() == 0) {
             return;
-        }else{
+        } else {
             userShareDOMapper.deleteByPrimaryKey(list.get(0).getId());
         }
     }
 
 
-    public List<Integer> queryGroupsByCode(Integer userId,String code){
+    public List<Integer> queryGroupsByCode(Integer userId, String code) {
 
-        List<UserShareDO> ssl= userShareDOMapper.selectByCond(new UserShareRequest(userId,code,null));
-        return ssl.stream().map(p->p.getsGroup()).collect(Collectors.toList());
+        List<UserShareDO> ssl = userShareDOMapper.selectByCond(new UserShareRequest(userId, code, null));
+        return ssl.stream().map(p -> p.getsGroup()).collect(Collectors.toList());
 
     }
 
     public void updateGroup(Integer userId, String code, List<Integer> newGrp) {
 
 
-        List<UserShareDO> ssl= userShareDOMapper.selectByCond(new UserShareRequest(userId,code,null));
+        List<UserShareDO> ssl = userShareDOMapper.selectByCond(new UserShareRequest(userId, code, null));
 
-        List<Integer> oldGrp=new ArrayList<>();
-        if(ssl.size()>0){
-            oldGrp=ssl.stream().map(p->p.getsGroup()).collect(Collectors.toList());
+        List<Integer> oldGrp = new ArrayList<>();
+        if (ssl.size() > 0) {
+            oldGrp = ssl.stream().map(p -> p.getsGroup()).collect(Collectors.toList());
         }
 
-        for(UserShareDO p:ssl){
-            if(!newGrp.contains(p.getsGroup().intValue())){
+        for (UserShareDO p : ssl) {
+            if (!newGrp.contains(p.getsGroup().intValue())) {
                 userShareDOMapper.deleteByPrimaryKey(p.getId());
             }
         }
 
-        for(Integer p:newGrp){
-            if(!oldGrp.contains(p.intValue())){
+        for (Integer p : newGrp) {
+            if (!oldGrp.contains(p.intValue())) {
                 UserShareDO userShareDO = new UserShareDO(userId, code, p);
                 userShareDOMapper.insert(userShareDO);
             }
@@ -113,7 +118,7 @@ public class SelectionService {
     }
 
 
-    public boolean canAdd(Integer userId, String code, Integer group) {
+    public boolean canAdd(Integer userId, Integer group, String code) {
 
         List<UserShareDO> list = userShareDOMapper.selectByCond(new UserShareRequest(userId, null, group));
         if (list.size() >= 100) {
@@ -121,8 +126,8 @@ public class SelectionService {
         }
         Object[] arr = list.stream().filter(p -> p.getShareCode().equals(code)).toArray();
         if (arr != null && arr.length > 0) {
-            throw new FMException(FMErrorEnum.SEL_ADD_EXIST);
-            //return false;
+            // throw new FMException(FMErrorEnum.SEL_ADD_EXIST);
+            return false;
         }
         return true;
     }

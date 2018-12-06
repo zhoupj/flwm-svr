@@ -40,6 +40,12 @@ public class SearchController {
 
         Assert.isTrue(StringUtils.isNotBlank(request.getTradeDate()), "日期必须填写");
 
+        List<String> validDates = getUseDateList();
+
+        if (!validDates.contains(request.getTradeDate())) {
+            throw new FMException(FMErrorEnum.INVALID_QUERY);
+        }
+
         List<SearchVO> vos = searchService.searchByDate(request.getTradeDate());
 
         vos = FilterUtil.filterData(vos, request);

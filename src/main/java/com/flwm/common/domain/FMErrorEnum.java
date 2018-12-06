@@ -16,6 +16,7 @@ public enum FMErrorEnum {
     NETWORK_EXCEPTION("1004", "WX网络异常"),
     PARAM_EXCEPTION("1005", "参数不对"),
     URL_EXCEPTION("1006", "路径不对"),
+    INVALID_QUERY("1007","非法查询"),
 
     USER_NOT_LOGIN("2003", "未登录"),
     USER_NOT_REGISTER("2004", " 未注册"),
@@ -32,6 +33,8 @@ public enum FMErrorEnum {
     SEL_ADD_EXIST("4002", "已经存在"),
 
     SEARCH_TOO_MANY("5001","查询条件太粗糙了，请缩小查询条件"),
+
+
 
     ;
 

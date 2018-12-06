@@ -25,6 +25,11 @@
     from share_data_basic
     where code = #{code}
   </select>
+
+  <select id="selectCodes"  resultType="java.lang.String">
+    select distinct  code
+    from share_data_basic
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from share_data_basic
     where id = #{id,jdbcType=INTEGER}

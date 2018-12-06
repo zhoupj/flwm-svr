@@ -37,6 +37,10 @@ public class TradeService {
         }
     }
 
+    public TradeDO queryById(Integer id){
+        return tradeDOMapper.selectByPrimaryKey(id);
+    }
+
 
     private void computeYieldRate(TradeDO tradeDO) {
 

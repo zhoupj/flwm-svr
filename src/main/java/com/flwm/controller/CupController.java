@@ -26,6 +26,11 @@ public class CupController {
         return tradeService.queryByUserId(UserCache.getUserId(), pn, sz);
     }
 
+    @PostMapping("/id")
+    public TradeDO queryById(@RequestParam(value = "id") Integer id) {
+        return tradeService.queryById(id);
+    }
+
     @PatchMapping("/save")
     public boolean save(@RequestBody TradeDO tradeDO) {
 

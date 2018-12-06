@@ -13,7 +13,6 @@ import com.flwm.dal.mapper.ActivityDOMapper;
 import com.flwm.dal.mapper.BuyRecordDOMapper;
 import com.flwm.dal.mapper.UserDOMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -54,9 +53,9 @@ public class UserService {
     }
 
     public void checkMemeber(UserDO userDO) {
-        if (userDO.getIsMember() >=MemberLevelEnum.ONE_LEVEL.getLevel() && userDO.getMemberDeadline() != null) {
+        if (userDO.getIsMember() >= MemberLevelEnum.ONE_LEVEL.getLevel() && userDO.getMemberDeadline() != null) {
             if (userDO.getMemberDeadline().compareTo(new Date()) < 0) {
-                userDO.setIsMember(0);
+                userDO.setIsMember(MemberLevelEnum.USER.getLevel());
                 userDO.setMemberDeadline(null);
                 userDOMapper.updateByPrimaryKey(userDO);
             }
@@ -110,7 +109,7 @@ public class UserService {
     public void buyMember(Integer userId, Integer actId) {
 
         UserDO userDO = getUser(userId);
-        if (userDO.getIsMember()== MemberLevelEnum.SUPER.getLevel()) {
+        if (userDO.getIsMember() == MemberLevelEnum.SUPER.getLevel()) {
             throw new FMException(FMErrorEnum.MEMBER_BUY_FORBIDDEN);
         } else {
             ActivityDO act = activityDOMapper.selectByPrimaryKey(actId);
