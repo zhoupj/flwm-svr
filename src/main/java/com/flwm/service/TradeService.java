@@ -1,10 +1,15 @@
 package com.flwm.service;
 
 import com.flwm.common.VO.MonthCupVO;
+import com.flwm.common.VO.SearchVO;
+import com.flwm.common.domain.FMErrorEnum;
+import com.flwm.common.domain.FMException;
 import com.flwm.common.util.DateUtil;
 import com.flwm.common.util.NumberUtil;
+import com.flwm.dal.dao.BasicDO;
 import com.flwm.dal.dao.TradeDO;
 import com.flwm.dal.mapper.TradeDOMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -17,8 +22,19 @@ public class TradeService {
 
     @Autowired
     TradeDOMapper tradeDOMapper;
+    @Autowired
+    private BasicService basicService;
 
     public void save(Integer userId, TradeDO tradeDO) {
+
+
+        if (StringUtils.isNumeric(tradeDO.getShareCode()) && basicService.queryByCode(tradeDO.getShareCode()) == null) {
+            throw new FMException(FMErrorEnum.CODE_NOT_EXIST);
+
+        } else if (basicService.queryByName(tradeDO.getShareCode()) == null) {
+            throw new FMException(FMErrorEnum.CODE_NOT_EXIST);
+        }
+
 
         tradeDO.setUserId(userId);
 
@@ -35,10 +51,24 @@ public class TradeService {
         } else {
             tradeDOMapper.updateByPrimaryKeySelective(tradeDO);
         }
+
     }
 
     public TradeDO queryById(Integer id) {
-        return tradeDOMapper.selectByPrimaryKey(id);
+        TradeDO td = tradeDOMapper.selectByPrimaryKey(id);
+        fillName(td);
+        return td;
+    }
+
+
+    private TradeDO fillName(TradeDO td) {
+        if (td != null) {
+            BasicDO sv = basicService.queryByCode(td.getShareCode());
+            if (sv != null) {
+                td.setName(sv.getName());
+            }
+        }
+        return td;
     }
 
 
@@ -72,7 +102,12 @@ public class TradeService {
         }
         int offset = pn * sz;
 
-        return tradeDOMapper.selectByUserId(userId, offset, sz);
+        List<TradeDO> lts = tradeDOMapper.selectByUserId(userId, offset, sz);
+
+        for (TradeDO lt : lts) {
+            fillName(lt);
+        }
+        return lts;
     }
 
 

@@ -42,7 +42,6 @@ public class CupController {
 
         if (tradeDO == null || tradeDO.getBuyPrice() == null || tradeDO.getSellPrice() == null || StringUtils.isBlank(tradeDO.getShareCode())) {
             throw new FMException(FMErrorEnum.PARAM_EXCEPTION);
-
         }
         tradeService.save(UserCache.getUserId(), tradeDO);
         return true;

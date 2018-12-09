@@ -26,8 +26,8 @@
     where code = #{code}
   </select>
 
-  <select id="selectCodes"  resultType="java.lang.String">
-    select distinct  code
+  <select id="selectAll"  resultMap="BaseResultMap">
+    select *
     from share_data_basic
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">

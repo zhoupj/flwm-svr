@@ -26,5 +26,5 @@ public interface BasicDOMapper {
     int updateByPrimaryKey(BasicDO record);
 
     //@Cacheable(value = CacheConfig.shareCode,unless = "#result==null || result.size()==0")
-    List<String> selectCodes();
+    List<BasicDO> selectAll();
 }

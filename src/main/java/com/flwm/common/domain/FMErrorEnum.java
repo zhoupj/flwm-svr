@@ -26,13 +26,15 @@ public enum FMErrorEnum {
 
 
     MEMBER_BUY_FORBIDDEN("3001", "会员未到期不能购买"),
-    MEMBER_BUY_BIND_PHONE("3001", "会员需要先绑定手机号"),
+    MEMBER_BUY_BIND_PHONE("3002", "会员需要先绑定手机号"),
 
 
     SEL_ADD_TOO_MANY("4001", "每个类型个数上限是100"),
     SEL_ADD_EXIST("4002", "已经存在"),
 
     SEARCH_TOO_MANY("5001","查询条件太粗糙了，请缩小查询条件"),
+
+    CODE_NOT_EXIST("6001", "输入的代码或名称不存在"),
 
 
 
