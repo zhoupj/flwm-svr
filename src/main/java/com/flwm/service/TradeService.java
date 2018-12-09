@@ -28,11 +28,18 @@ public class TradeService {
     public void save(Integer userId, TradeDO tradeDO) {
 
 
-        if (StringUtils.isNumeric(tradeDO.getShareCode()) && basicService.queryByCode(tradeDO.getShareCode()) == null) {
-            throw new FMException(FMErrorEnum.CODE_NOT_EXIST);
+        if (StringUtils.isNumeric(tradeDO.getShareCode())) {
 
-        } else if (basicService.queryByName(tradeDO.getShareCode()) == null) {
-            throw new FMException(FMErrorEnum.CODE_NOT_EXIST);
+            if (basicService.queryByCode(tradeDO.getShareCode()) == null)
+                throw new FMException(FMErrorEnum.CODE_NOT_EXIST);
+
+        } else {
+            BasicDO bd=basicService.queryByName(tradeDO.getShareCode());
+            if (bd == null) {
+                throw new FMException(FMErrorEnum.CODE_NOT_EXIST);
+            }else{
+                tradeDO.setShareCode(bd.getCode());
+            }
         }
 
 
