@@ -80,24 +80,6 @@ public class SearchService implements InitializingBean {
 
             log.info("searchByDate -> load data " + dt);
 
-//            List<String> codes= basicDOMapper.selectCodes();
-//            List<SearchVO> searchVOS = new ArrayList<>();
-//
-//            codes.stream().forEach(code->{
-//                SearchVO searchVO=getOneByCodeAndDt(code,dt);
-//                if(searchVO!=null){
-//                    searchVOS.add(searchVO);
-//                }
-//            });
-//
-//
-//            if (StringUtils.equals(latestDT, dt)) {
-//                cacheNewsVO();
-//            }
-//
-//            return searchVOS;
-
-
             List<SearchVO> searchVOS = new ArrayList<>();
 
             SearchRequest dayLineSearch = new SearchRequest();
@@ -121,11 +103,11 @@ public class SearchService implements InitializingBean {
 
             }
 
-            /**
-             * 放到此处不够优雅
-             */
-            if (StringUtils.equals(latestDT, dt)) {
-                cacheNewsVO();
+
+            if(dt.equals(latestDT)){
+                for (SearchVO vo : searchVOS) {
+                    latestVO.put(vo.getCode(), vo);
+                }
             }
 
             return searchVOS;
@@ -134,6 +116,9 @@ public class SearchService implements InitializingBean {
     }
 
     private SearchVO getOneByCodeAndDt(String code, String dt) {
+
+
+        log.info("search one by code {} and dt {}", code, dt);
 
         List<DayLineDO> dayLineDOS = dayLineDOMapper.selectByCond(new SearchRequest(code, dt));
         if (dayLineDOS.size() == 0) {
@@ -232,17 +217,6 @@ public class SearchService implements InitializingBean {
     }
 
 
-    private void cacheNewsVO() {
-
-        if (latestDT != null) {
-            List<SearchVO> vos = searchByDate(latestDT);
-            for (SearchVO vo : vos) {
-                latestVO.put(vo.getCode(), vo);
-            }
-        }
-    }
-
-
     public SearchVO getFromCacheNewsVO(String code) {
 
         SearchVO vo = latestVO.get(code);
@@ -261,5 +235,22 @@ public class SearchService implements InitializingBean {
         if (dt != null) {
             latestDT = DateUtil.getShortFormat(dt);
         }
+//        if (latestDT != null) {
+//
+//            List<String> codes = basicDOMapper.selectCodes();
+//            List<SearchVO> searchVOS = new CopyOnWriteArrayList<>();
+//
+//            codes.parallelStream().forEach(code -> {
+//                SearchVO searchVO = getOneByCodeAndDt(code, latestDT);
+//                if (searchVO != null) {
+//                    searchVOS.add(searchVO);
+//                }
+//            });
+//
+//
+//            for (SearchVO vo : searchVOS) {
+//                latestVO.put(vo.getCode(), vo);
+//            }
+//        }
     }
 }

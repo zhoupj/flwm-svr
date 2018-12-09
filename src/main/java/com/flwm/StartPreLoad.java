@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
 @Slf4j
 public class StartPreLoad {
 
-    private ExecutorService executorService = Executors.newFixedThreadPool(4);
+    private ExecutorService executorService = Executors.newFixedThreadPool(2);
 
 
     @Autowired

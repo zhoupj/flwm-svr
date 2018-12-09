@@ -31,9 +31,9 @@ public class CacheConfig {
     public enum CacheEnum {
 
 
-        USER_CACHE(userCache, 500, 36000), //有效期5秒
-        SHARE_CODE(shareCode, 1, 3600), //缺省10秒
-        SHARE_DATE(shareDate, 30, 36000),
+        USER_CACHE(userCache, 500, 3600),
+        SHARE_CODE(shareCode, 1, 3600),
+        SHARE_DATE(shareDate, 30, 1800),
 
         ;
 

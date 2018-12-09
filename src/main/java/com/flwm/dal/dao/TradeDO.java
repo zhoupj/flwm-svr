@@ -1,5 +1,7 @@
 package com.flwm.dal.dao;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.Date;
 
 public class TradeDO {
@@ -9,8 +11,10 @@ public class TradeDO {
 
     private String shareCode;
 
+    @JSONField(format = "yyyy-MM-dd")
     private Date addDate;
 
+    @JSONField(format = "yyyy-MM-dd")
     private Date removeDate;
 
     private Double buyPrice;

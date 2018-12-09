@@ -37,8 +37,13 @@ public class TradeService {
         }
     }
 
-    public TradeDO queryById(Integer id){
+    public TradeDO queryById(Integer id) {
         return tradeDOMapper.selectByPrimaryKey(id);
+    }
+
+
+    public void deleteById(Integer id) {
+        tradeDOMapper.deleteByPrimaryKey(id);
     }
 
 

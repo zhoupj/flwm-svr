@@ -21,14 +21,20 @@ public class CupController {
     private TradeService tradeService;
 
 
-    @PostMapping("/query")
+    @PostMapping("/list")
     public List<TradeDO> query(@RequestParam(value = "pn") Integer pn, @RequestParam(value = "sz") Integer sz) {
         return tradeService.queryByUserId(UserCache.getUserId(), pn, sz);
     }
 
-    @PostMapping("/id")
+    @PostMapping("/query")
     public TradeDO queryById(@RequestParam(value = "id") Integer id) {
         return tradeService.queryById(id);
+    }
+
+    @PostMapping("/del")
+    public boolean deleteById(@RequestParam(value = "id") Integer id) {
+         tradeService.deleteById(id);
+         return true;
     }
 
     @PatchMapping("/save")

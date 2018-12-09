@@ -54,6 +54,8 @@
     <result column="hk_holding_ratio" jdbcType="DOUBLE" property="hkHoldingRatio" />
     <result column="incOf2d" jdbcType="DOUBLE" property="incof2d" />
     <result column="is_m_r" jdbcType="INTEGER" property="isMR" />
+    <result column="valid" jdbcType="INTEGER" property="valid" />
+
   </resultMap>
   <sql id="Base_Column_List">
     id, trade_date, code, open, high, low, close, volume, turn, tradestatus, isST, totals, 
@@ -76,7 +78,7 @@
     select
     <include refid="Base_Column_List" />
     from share_data_day
-    where 1=1
+    where valid=1
       <if test="tradeDate!=null">
         and  trade_date = #{tradeDate,jdbcType=DATE}
       </if>
@@ -141,7 +143,7 @@
     select
     <include refid="Base_Column_List" />
     from share_data_day
-    where code=#{code}
+    where code=#{code} and valid=1
     order by trade_date desc
     limit #{days}
   </select>
@@ -150,6 +152,7 @@
   <select id="selectNewestDate"  resultType="java.util.Date">
     select trade_date
     from share_data_day
+    where valid=1
     order by trade_date desc
     limit 1
   </select>
