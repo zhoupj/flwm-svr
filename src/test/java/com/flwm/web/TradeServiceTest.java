@@ -79,4 +79,10 @@ public class TradeServiceTest {
 
         Assert.assertTrue(vos.size()>0);
     }
+
+
+    @Test
+    public void testGet(){
+        tradeService.queryByUserId(1,0,200);
+    }
 }

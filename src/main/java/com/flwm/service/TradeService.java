@@ -1,7 +1,6 @@
 package com.flwm.service;
 
 import com.flwm.common.VO.MonthCupVO;
-import com.flwm.common.VO.SearchVO;
 import com.flwm.common.domain.FMErrorEnum;
 import com.flwm.common.domain.FMException;
 import com.flwm.common.util.DateUtil;
@@ -34,10 +33,10 @@ public class TradeService {
                 throw new FMException(FMErrorEnum.CODE_NOT_EXIST);
 
         } else {
-            BasicDO bd=basicService.queryByName(tradeDO.getShareCode());
+            BasicDO bd = basicService.queryByName(tradeDO.getShareCode());
             if (bd == null) {
                 throw new FMException(FMErrorEnum.CODE_NOT_EXIST);
-            }else{
+            } else {
                 tradeDO.setShareCode(bd.getCode());
             }
         }
@@ -99,14 +98,11 @@ public class TradeService {
     }
 
 
+    /**
+     * pn start from 0;
+     */
     public List<TradeDO> queryByUserId(Integer userId, int pn, int sz) {
 
-        if (pn <= 0) {
-            pn = 0;
-        }
-        if (sz <= 0 || sz > 20) {
-            sz = 20;
-        }
         int offset = pn * sz;
 
         List<TradeDO> lts = tradeDOMapper.selectByUserId(userId, offset, sz);
@@ -123,7 +119,7 @@ public class TradeService {
         /**
          * 数据量太大之后，此处要优化，进行分业处理
          */
-        List<TradeDO> tradeDOS = queryByUserId(userId, 0, 10000);
+        List<TradeDO> tradeDOS = queryByUserId(userId, 0, 1000);
 
         Map<String, List<TradeDO>> map = new HashMap<>();
 
@@ -175,12 +171,13 @@ public class TradeService {
             } else {
                 lossRate += Math.abs(t.getYieldRate());
             }
-
         }
 
         MonthCupVO tv = new MonthCupVO();
 
         tv.setMonth(m);
+        tv.setCount(ts.size());
+
         if (succCount == ts.size()) {
             tv.setAvgLossYieldRate(0);
         } else {
@@ -200,7 +197,7 @@ public class TradeService {
         double fm = (100 - tv.getSuccRate()) * tv.getAvgLossYieldRate();
 
         if (fm == 0) {
-            tv.setCupV(8);
+            tv.setCupV(1);
             return tv;
         }
 

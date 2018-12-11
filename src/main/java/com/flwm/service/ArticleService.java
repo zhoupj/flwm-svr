@@ -20,12 +20,7 @@ public class ArticleService {
 
     public List<ArticleDO> query(int pageNo, int pageSize) {
 
-        if (pageNo < 0) {
-            pageNo = 0;
-        }
-        if (pageSize < 0 || pageSize > 20) {
-            pageSize = 10;
-        }
+
         return articleDOMapper.selectByPage(pageNo * pageSize, pageSize);
     }
 

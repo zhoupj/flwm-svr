@@ -15,4 +15,6 @@ public class MonthCupVO {
     private double avgLossYieldRate;
 
     private double cupV;
+
+    private int count;
 }

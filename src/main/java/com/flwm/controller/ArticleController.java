@@ -12,7 +12,7 @@ import java.util.List;
  * Created by zhoupj on 10/28/18.
  */
 @RestController
-@RequestMapping(value = "/art",method = RequestMethod.POST)
+@RequestMapping(value = "/art", method = RequestMethod.POST)
 public class ArticleController {
 
     @Autowired
@@ -21,6 +21,13 @@ public class ArticleController {
     @PostMapping("/list")
     public List<ArticleDO> getArts(@RequestParam(value = "pn") Integer pn,
                                    @RequestParam(value = "sz") Integer sz) {
+
+        if (pn < 0) {
+            pn = 0;
+        }
+        if (sz <=0 || sz > 20) {
+            sz = 20;
+        }
 
         return articleService.query(pn, sz);
 
@@ -31,7 +38,6 @@ public class ArticleController {
 
 
         return articleService.queryDetail(id);
-
 
 
     }

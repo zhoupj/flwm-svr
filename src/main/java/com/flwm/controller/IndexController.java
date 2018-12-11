@@ -21,7 +21,7 @@ public class IndexController {
     @Autowired
     FlwmConfig flwmConfig;
 
-    @RequestMapping(value = "/**")
+    @GetMapping(value = "/**")
     public String index(Model mv, HttpServletRequest request) {
 
         //System.out.println("拦截啦拦截啦拦截啦拦截啦拦截啦拦截啦:" + flwmConfig.getDomainName() + "," + flwmConfig.getEnv()+","+request.getRequestURI());
