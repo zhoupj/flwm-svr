@@ -23,6 +23,8 @@ public class BaiduRecognizerUtil {
     public static String convert(InputStream ins) {
 
         try {
+
+
             byte[] pcmBytes = mp3Convertpcm(ins);
 
             org.json.JSONObject resultJson = speechBdApi(pcmBytes);

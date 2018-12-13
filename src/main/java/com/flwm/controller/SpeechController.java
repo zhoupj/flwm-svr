@@ -1,15 +1,20 @@
 package com.flwm.controller;
 
+import com.flwm.common.domain.FMErrorEnum;
+import com.flwm.common.domain.FMException;
 import com.flwm.common.util.BaiduRecognizerUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedInputStream;
 
 @RestController
 @RequestMapping(value = "/sp")
+@Slf4j
 public class SpeechController {
 
 
@@ -19,8 +24,8 @@ public class SpeechController {
     public static final String SECRET_KEY = "iLiDG14UT6Is3oTur6sdaS7dZ2IGwj2s";
 
     /**
-     * @Description TODO
      * @return
+     * @Description TODO
      * @author liuyang
      * @blog http://www.pqsky.me
      * @date 2018年1月27日
@@ -29,14 +34,15 @@ public class SpeechController {
     public String convert(HttpServletRequest request) {
         MultipartFile file = ((MultipartHttpServletRequest) request).getFile("file");
 
-        try{
-            return BaiduRecognizerUtil.convert(file.getInputStream());
-        }catch (Exception e){
-            return "";
+        try {
+            BufferedInputStream bis = new BufferedInputStream(file.getInputStream());
+            return BaiduRecognizerUtil.convert(bis);
+        } catch (Exception e) {
+            log.error("parse error", e);
+            throw new FMException(FMErrorEnum.SYS_EXCEPTION);
         }
 
     }
-
 
 
 }
