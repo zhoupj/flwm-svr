@@ -32,10 +32,10 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-
         String requestUrl = request.getRequestURI();
         String method = request.getMethod();
 
+        log.info("url:"+requestUrl+"|"+method);
 
         /**
          * 链路追踪
