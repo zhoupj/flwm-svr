@@ -4,13 +4,14 @@ import com.flwm.common.domain.FMErrorEnum;
 import com.flwm.common.domain.FMException;
 import com.flwm.common.util.BaiduRecognizerUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedInputStream;
+import java.io.*;
 
 @RestController
 @RequestMapping(value = "/sp")
@@ -30,12 +31,16 @@ public class SpeechController {
      * @blog http://www.pqsky.me
      * @date 2018年1月27日
      */
-    @RequestMapping(value = "/convert")
+    @PostMapping(value = "/convert")
     public String convert(HttpServletRequest request) {
         MultipartFile file = ((MultipartHttpServletRequest) request).getFile("file");
 
+        System.out.println("file name:"+file.getName());
+
+
         try {
             BufferedInputStream bis = new BufferedInputStream(file.getInputStream());
+            saveFile(file.getInputStream(),file.getName());
             return BaiduRecognizerUtil.convert(bis);
         } catch (Exception e) {
             log.error("parse error", e);
@@ -43,6 +48,51 @@ public class SpeechController {
         }
 
     }
+
+    private void saveFile(InputStream inputStream, String fileName) {
+
+        OutputStream os = null;
+        try {
+            String path = "./";
+            // 2、保存到临时文件
+            // 1K的数据缓冲
+            byte[] bs = new byte[1024];
+            // 读取到的数据长度
+            int len;
+            // 输出的文件流保存到本地文件
+
+            File tempFile = new File(path);
+            if (!tempFile.exists()) {
+                tempFile.mkdirs();
+            }
+            os = new FileOutputStream(tempFile.getPath() + File.separator + fileName);
+            // 开始读取
+            while ((len = inputStream.read(bs)) != -1) {
+                os.write(bs, 0, len);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 完毕，关闭所有链接
+            try {
+                os.close();
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+
+
+
+
+
 
 
 }

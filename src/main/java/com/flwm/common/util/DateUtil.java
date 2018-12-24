@@ -81,6 +81,12 @@ public class DateUtil {
         return dateString;
     }
 
+    public static String getLongFormat(Date date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = formatter.format(date);
+        return dateString;
+    }
+
 
     public static Date parseLongFormat(String date) {
         try{
@@ -147,6 +153,11 @@ public class DateUtil {
         System.out.println(getDateList(0,4));
         System.out.println(getDateList(-1,3));
         System.out.println(getDateList(-2,5));
+
+
+        String now=getLongFormat(new Date());
+        System.out.println(now.substring(11));
+        System.out.println(now.substring(11).compareTo("10:00:00")>0);
     }
 
 }

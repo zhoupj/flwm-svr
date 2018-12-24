@@ -1,11 +1,13 @@
 package com.flwm.service;
 
+import com.flwm.common.domain.BasicVO;
 import com.flwm.dal.dao.BasicDO;
 import com.flwm.dal.mapper.BasicDOMapper;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,19 @@ public class BasicService implements InitializingBean {
 
     public BasicDO queryByName(String name) {
         return nameMap.get(name);
+    }
+
+
+    public List<BasicVO> getAll() {
+
+        List<BasicVO> vos = new ArrayList<>();
+
+        for (String code : codeMap.keySet()) {
+            vos.add(new BasicVO(codeMap.get(code)));
+        }
+
+        return vos;
+
     }
 
 

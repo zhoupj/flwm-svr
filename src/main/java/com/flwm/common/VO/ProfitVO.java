@@ -40,9 +40,6 @@ public class ProfitVO implements Serializable{
         this.s2=financeDO.getSsr2()==null?0:financeDO.getSsr2();
         this.s8=financeDO.getSsr8()==null?0:financeDO.getSsr8();
 
-
-
-
     }
 
 
