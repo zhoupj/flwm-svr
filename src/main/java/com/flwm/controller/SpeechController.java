@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.util.Collection;
 
 @RestController
 @RequestMapping(value = "/sp")
@@ -33,14 +34,17 @@ public class SpeechController {
      */
     @PostMapping(value = "/convert")
     public String convert(HttpServletRequest request) {
-        MultipartFile file = ((MultipartHttpServletRequest) request).getFile("file");
+        Collection files = ((MultipartHttpServletRequest) request).getFileMap().values();
 
-        System.out.println("file name:"+file.getName());
+        if (files == null || files.size() == 0) {
+            throw new FMException(FMErrorEnum.SYS_EXCEPTION);
+        }
 
-
+        MultipartFile file = (MultipartFile) files.iterator().next();
+        log.info("file name:" + file.getOriginalFilename()+","+file.getContentType()+","+file.getSize());
         try {
             BufferedInputStream bis = new BufferedInputStream(file.getInputStream());
-            saveFile(file.getInputStream(),file.getName());
+            saveFile(file.getInputStream(), file.getName());
             return BaiduRecognizerUtil.convert(bis);
         } catch (Exception e) {
             log.error("parse error", e);
@@ -85,14 +89,6 @@ public class SpeechController {
             }
         }
     }
-
-
-
-
-
-
-
-
 
 
 }

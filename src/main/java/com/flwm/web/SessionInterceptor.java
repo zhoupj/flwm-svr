@@ -35,7 +35,9 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
         String requestUrl = request.getRequestURI();
         String method = request.getMethod();
 
-        log.info("url:"+requestUrl+"|"+method);
+
+
+        log.info("url:"+requestUrl+"|"+method+"|"+ request.getRemoteHost());
 
         /**
          * 链路追踪

@@ -1,5 +1,6 @@
 package com.flwm.controller;
 
+import com.flwm.common.VO.UserCountVO;
 import com.flwm.common.cache.UserCache;
 import com.flwm.common.domain.FMErrorEnum;
 import com.flwm.common.domain.FMException;
@@ -51,12 +52,16 @@ public class UserController {
     }
 
 
-
     @PostMapping("/ph")
     public boolean bindPhone(@RequestParam(value = "phone") String phone) {
         userService.updateUserPhone(UserCache.getUserId(), phone);
         return true;
 
+    }
+
+    @PostMapping("/uc")
+    public UserCountVO getCount() {
+        return userService.queryUserCount();
     }
 
 

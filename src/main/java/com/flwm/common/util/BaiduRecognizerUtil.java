@@ -1,15 +1,13 @@
 package com.flwm.common.util;
 
 import com.baidu.aip.speech.AipSpeech;
+import javazoom.spi.mpeg.sampled.file.MpegAudioFileReader;
 import org.json.JSONObject;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 public class BaiduRecognizerUtil {
 
@@ -56,7 +54,8 @@ public class BaiduRecognizerUtil {
 
     private static byte[] mp3Convertpcm(InputStream mp3Stream) throws Exception {
         // 原MP3文件转AudioInputStream
-        AudioInputStream mp3audioStream = AudioSystem.getAudioInputStream(mp3Stream);
+         AudioInputStream mp3audioStream = AudioSystem.getAudioInputStream(mp3Stream);
+        //AudioInputStream mp3audioStream = getPcmAudioInputStream(mp3Stream);
         // 将AudioInputStream MP3文件 转换为PCM AudioInputStream
         AudioInputStream pcmaudioStream = AudioSystem.getAudioInputStream(AudioFormat.Encoding.PCM_SIGNED,
                 mp3audioStream);
@@ -66,7 +65,23 @@ public class BaiduRecognizerUtil {
         return pcmBytes;
     }
 
+    private static AudioInputStream getPcmAudioInputStream(InputStream mp3Stream) {
 
+        AudioInputStream audioInputStream = null;
+        AudioFormat targetFormat = null;
+        try {
+            AudioInputStream in = null;
+            MpegAudioFileReader mp = new MpegAudioFileReader();
+            in = mp.getAudioInputStream(mp3Stream);
+            AudioFormat baseFormat = in.getFormat();
+            targetFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, baseFormat.getSampleRate(), 16,
+                    baseFormat.getChannels(), baseFormat.getChannels() * 2, baseFormat.getSampleRate(), false);
+            audioInputStream = AudioSystem.getAudioInputStream(targetFormat, in);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return audioInputStream;
+    }
 
 
     public static byte[] toByteArray(InputStream input)

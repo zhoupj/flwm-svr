@@ -5,6 +5,7 @@ import com.flwm.common.VO.SearchVO;
 import com.flwm.common.VO.ShapeVO;
 import com.flwm.common.VO.TechVO;
 import com.flwm.common.annotation.AuthMember;
+import com.flwm.common.annotation.QueryLimit;
 import com.flwm.common.auth.MemberLevelEnum;
 import com.flwm.common.cache.UserCache;
 import com.flwm.common.domain.*;
@@ -65,7 +66,7 @@ public class SearchController {
 
 
     @PostMapping("/data")
-    public List<BasicVO> queryCodeNames(){
+    public List<BasicVO> queryCodeNames() {
 
         return basicService.getAll();
     }
@@ -74,6 +75,13 @@ public class SearchController {
     @AuthMember
     public List<ShapeVO> queryK(@RequestParam(value = "code") String code) {
         return searchService.queryShape(code, 500);
+    }
+
+
+    @PostMapping("/can")
+    @QueryLimit
+    public boolean canSearchDetail() {
+        return true;
     }
 
     @PostMapping("/basic")
@@ -105,11 +113,11 @@ public class SearchController {
             return DateUtil.getDateList(0, 5);
         } else {
 
-            String time=DateUtil.getLongFormat(new Date());
+            String time = DateUtil.getLongFormat(new Date());
             //10店之后可看昨天的
-            if(time.substring(11).compareTo("10:00:00")>0){
+            if (time.substring(11).compareTo("10:00:00") > 0) {
                 return DateUtil.getDateList(-1, 3);
-            }else{
+            } else {
                 return DateUtil.getDateList(-2, 3);
             }
 

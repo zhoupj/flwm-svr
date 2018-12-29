@@ -1,5 +1,6 @@
 package com.flwm.service;
 
+import com.flwm.common.VO.UserCountVO;
 import com.flwm.common.auth.MemberLevelEnum;
 import com.flwm.common.cache.CacheConfig;
 import com.flwm.common.domain.FMErrorEnum;
@@ -70,6 +71,7 @@ public class UserService {
     }
 
 
+    @CacheEvict(value = CacheConfig.userCount, key = "#root.methodName")
     public void insertUser(String openId, String nickName) {
 
         /**
@@ -146,6 +148,15 @@ public class UserService {
         userDO.setPhone(phone);
         userDOMapper.updateByPrimaryKeySelective(userDO);
 
+    }
+
+
+    @Cacheable(value = CacheConfig.userCount, key = "#root.methodName", unless = "#result==null")
+    public UserCountVO queryUserCount() {
+
+        long uc = userDOMapper.selectCount();
+        long mc = userDOMapper.selectMemberCount();
+        return new UserCountVO(uc, mc);
     }
 
 

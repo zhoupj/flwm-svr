@@ -24,16 +24,18 @@ public class CacheConfig {
 
 
     public static final String userCache = "userCache";
-    public static final String shareCode = "shareCode";
+    public static final String shareAllCode = "shareCode";
     public static final String shareDate = "shareDate";
+    public static final String userCount = "userCount";
 
 
     public enum CacheEnum {
 
 
-        USER_CACHE(userCache, 500, 3600),
-        SHARE_CODE(shareCode, 1, 3600),
-        SHARE_DATE(shareDate, 30, 1800),
+        USER_CACHE(userCache, 500, 60 * 60),
+        SHARE_CODE(shareAllCode, 1, 60 * 60 * 24),
+        SHARE_DATE(shareDate, 30, 60 * 30),
+        USER_COUNT_CACHE(userCount, 1, 60 * 5),
 
         ;
 
@@ -45,10 +47,11 @@ public class CacheConfig {
         private int ttl;        //过期时间（秒）
 
 
-        CacheEnum(String name, int ttl, int maxSize) {
+        CacheEnum(String name, int maxSize, int ttl) {
             this.name = name;
-            this.ttl = ttl;
             this.maxSize = maxSize;
+            this.ttl = ttl;
+
         }
 
 

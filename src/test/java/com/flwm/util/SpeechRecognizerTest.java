@@ -31,11 +31,18 @@ public class SpeechRecognizerTest {
 
     }
 
+    @Test
+    public void testBaiduSpeech1() throws Exception {
+        File file = new File("/Users/zhoupj/Documents/svncode/flwm-web/src/test/java/com/flwm/util/nls-sample-16k.wav");
+        BufferedInputStream zipTest = new BufferedInputStream(new FileInputStream(file));
+        String rst = BaiduRecognizerUtil.convert(zipTest);
+        System.out.println(rst);
+    }
+
 
     @Test
-    public void testBaiduSpeech() throws Exception {
-        File file = new File("/Users/zhoupj/Documents/svncode/flwm-web/src/test/java/com/flwm/util/nls-sample-16k.wav");
-
+    public void testBaiduSpeech2() throws Exception {
+        File file=new File("/Users/zhoupj/Documents/svncode/flwm-web/test.mp3");
         BufferedInputStream zipTest = new BufferedInputStream(new FileInputStream(file));
         String rst = BaiduRecognizerUtil.convert(zipTest);
         System.out.println(rst);

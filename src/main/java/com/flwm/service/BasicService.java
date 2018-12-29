@@ -1,10 +1,12 @@
 package com.flwm.service;
 
+import com.flwm.common.cache.CacheConfig;
 import com.flwm.common.domain.BasicVO;
 import com.flwm.dal.dao.BasicDO;
 import com.flwm.dal.mapper.BasicDOMapper;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,7 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class BasicService implements InitializingBean {
+//implements InitializingBean
+public class BasicService {
 
     @Autowired
     private BasicDOMapper basicDOMapper;
@@ -32,7 +35,11 @@ public class BasicService implements InitializingBean {
     }
 
 
+    @Cacheable(value = CacheConfig.shareAllCode, key = "#root.methodName", unless = "#result==null || #result.size()==0")
     public List<BasicVO> getAll() {
+
+
+        loadData();
 
         List<BasicVO> vos = new ArrayList<>();
 
@@ -45,8 +52,7 @@ public class BasicService implements InitializingBean {
     }
 
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
+    public void loadData() {
 
 
         List<BasicDO> bd = basicDOMapper.selectAll();

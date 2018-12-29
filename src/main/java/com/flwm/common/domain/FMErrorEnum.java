@@ -23,6 +23,7 @@ public enum FMErrorEnum {
     USER_ACCOUNT_WRONG("2005", " 账号或者密码错误"),
     USER_ACCOUNT_FORMAT_WRONG("2006", " 账号必须为手机号"),
     USER_ACCOUNT_NOT_MEMBER("2007", "非会员不能查看"),
+    USER_ACCOUNT_QUERY_LIMIT("2008", "非会员一天查看次数为30次"),
 
 
     MEMBER_BUY_FORBIDDEN("3001", "会员未到期不能购买"),

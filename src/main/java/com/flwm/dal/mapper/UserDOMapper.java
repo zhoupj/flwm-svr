@@ -25,4 +25,8 @@ public interface UserDOMapper {
     UserDO selectByOpenId(String openId);
 
     UserDO selectByPhone(String phone);
+
+    long selectMemberCount();
+
+    long selectCount();
 }
